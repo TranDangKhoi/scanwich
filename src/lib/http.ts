@@ -1,6 +1,9 @@
 import { redirect } from "next/navigation";
 import parsedEnvData from "src/config";
 import { HTTP_STATUS_CODE } from "src/constants/httpStatusCode.constants";
+import { TLoginRes } from "src/validations/auth.validations";
+
+const isClient = typeof window !== "undefined";
 
 // Vì chúng ta cần gọi API từ cả phía Next.js Server và một Server khác,
 // nên chúng ta cần sử dụng `RequestInit` kèm thêm `baseUrl`.
@@ -16,10 +19,12 @@ type CustomOptions<TBody = unknown> = Omit<RequestInit, "method"> & {
 export class HttpError extends Error {
   status: number;
   payload: any;
-  constructor({ status, payload }: { status: number; payload: any }) {
+  message: string;
+  constructor({ status, payload, message }: { status: number; payload: any; message: string }) {
     super("HttpError");
     this.status = status;
     this.payload = payload;
+    this.message = message;
   }
 }
 
@@ -35,10 +40,10 @@ type UnprocessableEntityErrorPayload = {
 // Lớp `UnprocessableEntityError` kế thừa từ `HttpError` để đại diện cho lỗi 422 (Unprocessable Entity).
 // Lỗi này thường liên quan tới forms và xảy ra khi dữ liệu gửi lên server không hợp lệ.
 export class UnprocessableEntityError extends HttpError {
-  status: 422;
+  status: typeof HTTP_STATUS_CODE.UNPROCESSABLE_ENTITY;
   payload: UnprocessableEntityErrorPayload;
   constructor({ status, payload }: { status: 422; payload: UnprocessableEntityErrorPayload }) {
-    super({ status, payload });
+    super({ status, payload, message: payload.message || "Lỗi UnprocessableEntityError" });
     this.status = status;
     this.payload = payload;
   }
@@ -56,35 +61,16 @@ export class UnauthorizedError extends HttpError {
   status: 401;
   payload: UnauthorizedErrorPayload;
   constructor({ status, payload }: { status: 401; payload: UnauthorizedErrorPayload }) {
-    super({ status, payload });
+    super({ status, payload, message: payload.message || "Lỗi UnauthorizedError" });
     this.status = status;
     this.payload = payload;
   }
 }
 
-// Lớp `SessionToken` quản lý token phiên đăng nhập của người dùng.
-// Token này được lưu trữ trong một biến private và có thể truy cập thông qua getter/setter.
-class SessionToken {
-  private token = "";
-  get value() {
-    return this.token;
-  }
-  set value(token: string) {
-    // Nếu gọi method này ở server thì sẽ bị lỗi
-    if (typeof window === "undefined") {
-      throw new Error("Cannot set token on server side");
-    }
-    this.token = token;
-  }
-}
-
-// Tạo một instance của `SessionToken` để sử dụng trong ứng dụng.
-export const clientSessionToken = new SessionToken();
-
 // Hàm `request` là hàm chính để thực hiện các yêu cầu HTTP.
 // Nó hỗ trợ các phương thức GET, POST, PUT, DELETE và xử lý các lỗi HTTP.
 const request = async <TResponse, TBody = unknown>(
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   url: string,
   options?: CustomOptions<TBody>,
 ) => {
@@ -92,15 +78,24 @@ const request = async <TResponse, TBody = unknown>(
   const body = options?.body instanceof FormData ? options?.body : JSON.stringify(options?.body);
 
   // Các header mặc định cho mọi yêu cầu.
-  const baseHeaders = {
+  let baseHeaders = {
     ...(!(options?.body instanceof FormData) && { "Content-Type": "application/json" }),
-    Authorization: clientSessionToken.value ? `Bearer ${clientSessionToken.value}` : "",
   };
+
+  // Nếu có token trong localStorage, thêm vào header Authorization.
+  if (isClient) {
+    const accessToken = localStorage.getItem("accessToken");
+    baseHeaders = {
+      ...baseHeaders,
+      ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
+    };
+  }
 
   // Xác định baseUrl dựa trên giá trị truyền vào hoặc lấy từ cấu hình môi trường.
   // Nếu `baseUrl` là "" thì sử dụng baseUrl của client (như hiện tại thì đang là localhost:3000),
   // ngược lại thì sử dụng baseUrl của server (ví dụ: localhost:4000).
   const baseUrl = options?.baseUrl ?? parsedEnvData.NEXT_PUBLIC_API_ENDPOINT;
+
   // Tạo URL đầy đủ bằng cách kết hợp baseUrl và đường dẫn tương đối.
   const fullUrl = url.startsWith("/") ? `${baseUrl}${url}` : `${baseUrl}/${url}`;
 
@@ -120,7 +115,10 @@ const request = async <TResponse, TBody = unknown>(
   const data = {
     status: res.status,
     payload,
+    message: (payload as any).message || "",
   };
+
+  const stillHavingToken = localStorage.getItem("accessToken");
 
   // Xử lý lỗi nếu yêu cầu không thành công.
   if (!res.ok) {
@@ -133,22 +131,21 @@ const request = async <TResponse, TBody = unknown>(
         },
       );
     } else if (res.status === HTTP_STATUS_CODE.UNAUTHORIZED) {
-      if (typeof window !== "undefined") {
+      if (isClient && stillHavingToken) {
         await fetch("/api/auth/logout", {
           method: "POST",
-          body: JSON.stringify({ forcedToLogout: true }),
+          body: null, // Logout sẽ luôn luôn thành công cả kể accessToken có hết hạn đi chăng nữa
           headers: {
             ...baseHeaders,
           },
-        }).then((res) => {
-          if (res.ok) {
-            clientSessionToken.value = "";
-            window.location.href = "/login";
-          }
+        }).finally(() => {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          window.location.href = "/login";
         });
       } else {
-        const sessionToken = (options?.headers as any).Authorization.split(" ")[1];
-        redirect(`/logout?sessionToken=${sessionToken}`);
+        const accessToken = (options?.headers as any).Authorization.split(" ")[1];
+        redirect(`/logout?accessToken=${accessToken}`);
       }
     } else {
       // Nếu là lỗi khác, ném ra `HttpError`.
@@ -158,13 +155,15 @@ const request = async <TResponse, TBody = unknown>(
 
   // Cập nhật token phiên đăng nhập nếu yêu cầu liên quan đến đăng nhập/đăng ký.
   // Đảm bảo logic ở trong `if` chỉ chạy ở phía browser (client)
-  if (typeof window !== "undefined") {
-    if (["/auth/login", "/auth/register"].some((path) => path === url)) {
-      // TODO: Update from any to types
-      clientSessionToken.value = (payload as any).data.token;
+  if (isClient) {
+    if (["api/auth/login", "api/auth/register"].some((path) => path === url)) {
+      const { accessToken, refreshToken } = (payload as TLoginRes).data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
     } else if ("/auth/logout".includes(url)) {
       // Xóa token nếu yêu cầu là đăng xuất.
-      clientSessionToken.value = "";
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
     }
   }
 
@@ -178,10 +177,13 @@ const http = {
     return request<Response>("GET", url, options);
   },
   post<Response, TBody>(url: string, body: any, options?: Omit<CustomOptions<TBody>, "body"> | undefined) {
-    return request<Response>("POST", url, { ...options, body });
+    return request<Response, TBody>("POST", url, { ...options, body });
+  },
+  patch<Response, TBody>(url: string, body: any, options?: Omit<CustomOptions<TBody>, "body"> | undefined) {
+    return request<Response, TBody>("PATCH", url, { ...options, body });
   },
   put<Response, TBody>(url: string, body: any, options?: Omit<CustomOptions<TBody>, "body"> | undefined) {
-    return request<Response>("PUT", url, { ...options, body });
+    return request<Response, TBody>("PUT", url, { ...options, body });
   },
   delete<Response>(url: string, body: any, options?: Omit<CustomOptions, "body"> | undefined) {
     return request<Response>("DELETE", url, { ...options, body });
