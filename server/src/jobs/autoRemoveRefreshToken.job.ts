@@ -1,22 +1,22 @@
-import prisma from '@/database'
-import { Cron } from 'croner'
+import prisma from "@/database";
+import { Cron } from "croner";
 
 // Cron pattern for every hour
 
 const autoRemoveRefreshTokenJob = () => {
-  Cron('@hourly', async () => {
+  Cron("@hourly", async () => {
     try {
       await prisma.refreshToken.deleteMany({
         where: {
           expiresAt: {
-            lt: new Date()
-          }
-        }
-      })
+            lt: new Date(),
+          },
+        },
+      });
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  })
-}
+  });
+};
 
-export default autoRemoveRefreshTokenJob
+export default autoRemoveRefreshTokenJob;

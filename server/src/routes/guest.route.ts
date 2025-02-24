@@ -1,21 +1,21 @@
-import { ManagerRoom, Role } from '@/constants/type'
+import { ManagerRoom, Role } from "@/constants/type";
 import {
   guestCreateOrdersController,
   guestGetOrdersController,
   guestLoginController,
   guestLogoutController,
-  guestRefreshTokenController
-} from '@/controllers/guest.controller'
-import { requireGuestHook, requireLoginedHook } from '@/hooks/auth.hooks'
+  guestRefreshTokenController,
+} from "@/controllers/guest.controller";
+import { requireGuestHook, requireLoginedHook } from "@/hooks/auth.hooks";
 import {
   LogoutBody,
   LogoutBodyType,
   RefreshTokenBody,
   RefreshTokenBodyType,
   RefreshTokenRes,
-  RefreshTokenResType
-} from '@/schemaValidations/auth.schema'
-import { MessageRes, MessageResType } from '@/schemaValidations/common.schema'
+  RefreshTokenResType,
+} from "@/schemaValidations/auth.schema";
+import { MessageRes, MessageResType } from "@/schemaValidations/common.schema";
 import {
   GuestCreateOrdersBody,
   GuestCreateOrdersBodyType,
@@ -26,26 +26,26 @@ import {
   GuestLoginBody,
   GuestLoginBodyType,
   GuestLoginRes,
-  GuestLoginResType
-} from '@/schemaValidations/guest.schema'
-import { FastifyInstance, FastifyPluginOptions } from 'fastify'
+  GuestLoginResType,
+} from "@/schemaValidations/guest.schema";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
 
 export default async function guestRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.post<{ Reply: GuestLoginResType; Body: GuestLoginBodyType }>(
-    '/auth/login',
+    "/auth/login",
     {
       schema: {
         response: {
-          200: GuestLoginRes
+          200: GuestLoginRes,
         },
-        body: GuestLoginBody
-      }
+        body: GuestLoginBody,
+      },
     },
     async (request, reply) => {
-      const { body } = request
-      const result = await guestLoginController(body)
+      const { body } = request;
+      const result = await guestLoginController(body);
       reply.send({
-        message: 'Đăng nhập thành công',
+        message: "Đăng nhập thành công",
         data: {
           guest: {
             id: result.guest.id,
@@ -53,99 +53,99 @@ export default async function guestRoutes(fastify: FastifyInstance, options: Fas
             role: Role.Guest,
             tableNumber: result.guest.tableNumber,
             createdAt: result.guest.createdAt,
-            updatedAt: result.guest.updatedAt
+            updatedAt: result.guest.updatedAt,
           },
           accessToken: result.accessToken,
-          refreshToken: result.refreshToken
-        }
-      })
-    }
-  )
+          refreshToken: result.refreshToken,
+        },
+      });
+    },
+  );
   fastify.post<{ Reply: MessageResType; Body: LogoutBodyType }>(
-    '/auth/logout',
+    "/auth/logout",
     {
       schema: {
         response: {
-          200: MessageRes
+          200: MessageRes,
         },
-        body: LogoutBody
+        body: LogoutBody,
       },
-      preValidation: fastify.auth([requireLoginedHook])
+      preValidation: fastify.auth([requireLoginedHook]),
     },
     async (request, reply) => {
-      const message = await guestLogoutController(request.decodedAccessToken?.userId as number)
+      const message = await guestLogoutController(request.decodedAccessToken?.userId as number);
       reply.send({
-        message
-      })
-    }
-  )
+        message,
+      });
+    },
+  );
 
   fastify.post<{
-    Reply: RefreshTokenResType
-    Body: RefreshTokenBodyType
+    Reply: RefreshTokenResType;
+    Body: RefreshTokenBodyType;
   }>(
-    '/auth/refresh-token',
+    "/auth/refresh-token",
     {
       schema: {
         response: {
-          200: RefreshTokenRes
+          200: RefreshTokenRes,
         },
-        body: RefreshTokenBody
-      }
+        body: RefreshTokenBody,
+      },
     },
     async (request, reply) => {
-      const result = await guestRefreshTokenController(request.body.refreshToken)
+      const result = await guestRefreshTokenController(request.body.refreshToken);
       reply.send({
-        message: 'Lấy token mới thành công',
-        data: result
-      })
-    }
-  )
+        message: "Lấy token mới thành công",
+        data: result,
+      });
+    },
+  );
 
   fastify.post<{
-    Reply: GuestCreateOrdersResType
-    Body: GuestCreateOrdersBodyType
+    Reply: GuestCreateOrdersResType;
+    Body: GuestCreateOrdersBodyType;
   }>(
-    '/orders',
+    "/orders",
     {
       schema: {
         response: {
-          200: GuestCreateOrdersRes
+          200: GuestCreateOrdersRes,
         },
-        body: GuestCreateOrdersBody
+        body: GuestCreateOrdersBody,
       },
-      preValidation: fastify.auth([requireLoginedHook, requireGuestHook])
+      preValidation: fastify.auth([requireLoginedHook, requireGuestHook]),
     },
     async (request, reply) => {
-      const guestId = request.decodedAccessToken?.userId as number
-      const result = await guestCreateOrdersController(guestId, request.body)
-      fastify.io.to(ManagerRoom).emit('new-order', result)
+      const guestId = request.decodedAccessToken?.userId as number;
+      const result = await guestCreateOrdersController(guestId, request.body);
+      fastify.io.to(ManagerRoom).emit("new-order", result);
       reply.send({
-        message: 'Đặt món thành công',
-        data: result as GuestCreateOrdersResType['data']
-      })
-    }
-  )
+        message: "Đặt món thành công",
+        data: result as GuestCreateOrdersResType["data"],
+      });
+    },
+  );
 
   fastify.get<{
-    Reply: GuestGetOrdersResType
+    Reply: GuestGetOrdersResType;
   }>(
-    '/orders',
+    "/orders",
     {
       schema: {
         response: {
-          200: GuestGetOrdersRes
-        }
+          200: GuestGetOrdersRes,
+        },
       },
-      preValidation: fastify.auth([requireLoginedHook, requireGuestHook])
+      preValidation: fastify.auth([requireLoginedHook, requireGuestHook]),
     },
     async (request, reply) => {
-      const guestId = request.decodedAccessToken?.userId as number
-      const result = await guestGetOrdersController(guestId)
+      const guestId = request.decodedAccessToken?.userId as number;
+      const result = await guestGetOrdersController(guestId);
       reply.send({
-        message: 'Lấy danh sách đơn hàng thành công',
-        data: result as GuestGetOrdersResType['data']
-      })
-    }
-  )
+        message: "Lấy danh sách đơn hàng thành công",
+        data: result as GuestGetOrdersResType["data"],
+      });
+    },
+  );
 }
