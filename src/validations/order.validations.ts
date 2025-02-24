@@ -1,4 +1,4 @@
-import { DISH_STATUS_VALUES, ORDER_STATUS_VALUES } from "src/constants/type";
+import { DISH_STATUS_VALUES, ORDER_STATUS_VALUES } from "src/constants/types.constants.ts";
 import { accountSchema } from "src/validations/account.validations";
 import { tableSchema } from "src/validations/table.validations";
 import z from "zod";

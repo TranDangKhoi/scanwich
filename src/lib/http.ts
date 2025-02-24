@@ -94,7 +94,7 @@ const request = async <TResponse, TBody = unknown>(
   // Xác định baseUrl dựa trên giá trị truyền vào hoặc lấy từ cấu hình môi trường.
   // Nếu `baseUrl` là "" thì sử dụng baseUrl của client (như hiện tại thì đang là localhost:3000),
   // ngược lại thì sử dụng baseUrl của server (ví dụ: localhost:4000).
-  const baseUrl = options?.baseUrl ?? parsedEnvData.NEXT_PUBLIC_API_ENDPOINT;
+  const baseUrl = options?.baseUrl ?? parsedEnvData.NEXT_PUBLIC_API_URL;
 
   // Tạo URL đầy đủ bằng cách kết hợp baseUrl và đường dẫn tương đối.
   const fullUrl = url.startsWith("/") ? `${baseUrl}${url}` : `${baseUrl}/${url}`;
@@ -118,7 +118,10 @@ const request = async <TResponse, TBody = unknown>(
     message: (payload as any).message || "",
   };
 
-  const stillHavingToken = localStorage.getItem("accessToken");
+  let stillHavingToken = false;
+  if (isClient) {
+    stillHavingToken = !!localStorage.getItem("accessToken");
+  }
 
   // Xử lý lỗi nếu yêu cầu không thành công.
   if (!res.ok) {

@@ -1,4 +1,4 @@
-import { DISH_STATUS_VALUES } from "src/constants/type";
+import { DISH_STATUS_VALUES } from "src/constants/types.constants.ts";
 import z from "zod";
 
 export const createDishBodySchema = z.object({

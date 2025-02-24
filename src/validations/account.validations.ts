@@ -1,4 +1,4 @@
-import { ROLE } from "src/constants/type";
+import { ROLE } from "src/constants/types.constants.ts";
 import z from "zod";
 
 export const accountSchema = z.object({
