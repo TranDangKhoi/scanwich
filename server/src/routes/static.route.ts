@@ -1,7 +1,7 @@
-import envConfig from "@/config";
 import fastifyStatic from "@fastify/static";
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import path from "path";
+import envConfig from "src/config";
 
 export default async function staticRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.register(fastifyStatic, {

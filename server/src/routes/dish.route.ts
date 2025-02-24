@@ -1,3 +1,4 @@
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import {
   createDish,
   deleteDish,
@@ -5,8 +6,8 @@ import {
   getDishList,
   getDishListWithPagination,
   updateDish,
-} from "@/controllers/dish.controller";
-import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "@/hooks/auth.hooks";
+} from "src/controllers/dish.controller";
+import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "src/hooks/auth.hooks";
 import {
   CreateDishBody,
   CreateDishBodyType,
@@ -22,8 +23,7 @@ import {
   DishResType,
   UpdateDishBody,
   UpdateDishBodyType,
-} from "@/schemaValidations/dish.schema";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+} from "src/schemaValidations/dish.schema";
 
 export default async function dishRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.get<{

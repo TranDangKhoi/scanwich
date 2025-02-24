@@ -1,6 +1,6 @@
-import { DishStatus, OrderStatus, TableStatus } from "@/constants/type";
-import prisma from "@/database";
-import { CreateOrdersBodyType, UpdateOrderBodyType } from "@/schemaValidations/order.schema";
+import { DishStatus, OrderStatus, TableStatus } from "src/constants/type";
+import prisma from "src/database";
+import { CreateOrdersBodyType, UpdateOrderBodyType } from "src/schemaValidations/order.schema";
 
 export const createOrdersController = async (orderHandlerId: number, body: CreateOrdersBodyType) => {
   const { guestId, orders } = body;

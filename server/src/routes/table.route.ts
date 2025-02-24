@@ -1,5 +1,6 @@
-import { createTable, deleteTable, getTableDetail, getTableList, updateTable } from "@/controllers/table.controller";
-import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "@/hooks/auth.hooks";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { createTable, deleteTable, getTableDetail, getTableList, updateTable } from "src/controllers/table.controller";
+import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "src/hooks/auth.hooks";
 import {
   CreateTableBody,
   CreateTableBodyType,
@@ -11,8 +12,7 @@ import {
   TableResType,
   UpdateTableBody,
   UpdateTableBodyType,
-} from "@/schemaValidations/table.schema";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+} from "src/schemaValidations/table.schema";
 
 export default async function tablesRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.get<{

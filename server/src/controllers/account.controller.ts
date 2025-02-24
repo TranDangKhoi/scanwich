@@ -1,19 +1,19 @@
-import envConfig from "@/config";
-import { PrismaErrorCode } from "@/constants/error-reference";
-import { Role, TableStatus } from "@/constants/type";
-import prisma from "@/database";
+import envConfig from "src/config";
+import { PrismaErrorCode } from "src/constants/error-reference";
+import { Role, TableStatus } from "src/constants/type";
+import prisma from "src/database";
 import {
   ChangePasswordBodyType,
   CreateEmployeeAccountBodyType,
   CreateGuestBodyType,
   UpdateEmployeeAccountBodyType,
   UpdateMeBodyType,
-} from "@/schemaValidations/account.schema";
-import { RoleType } from "@/types/jwt.types";
-import { comparePassword, hashPassword } from "@/utils/crypto";
-import { EntityError, isPrismaClientKnownRequestError } from "@/utils/errors";
-import { getChalk } from "@/utils/helpers";
-import { signAccessToken, signRefreshToken, verifyRefreshToken } from "@/utils/jwt";
+} from "src/schemaValidations/account.schema";
+import { RoleType } from "src/types/jwt.types";
+import { comparePassword, hashPassword } from "src/utils/crypto";
+import { EntityError, isPrismaClientKnownRequestError } from "src/utils/errors";
+import { getChalk } from "src/utils/helpers";
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from "src/utils/jwt";
 
 export const initOwnerAccount = async () => {
   const accountCount = await prisma.account.count();

@@ -1,7 +1,7 @@
-import { Role } from "@/constants/type";
-import { AuthError, ForbiddenError } from "@/utils/errors";
-import { verifyAccessToken } from "@/utils/jwt";
 import { FastifyRequest } from "fastify";
+import { Role } from "src/constants/type";
+import { AuthError, ForbiddenError } from "src/utils/errors";
+import { verifyAccessToken } from "src/utils/jwt";
 
 export const pauseApiHook = async (request: FastifyRequest) => {
   // throw new ForbiddenError('Chức năng bị tạm ngưng')

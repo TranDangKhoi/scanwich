@@ -1,5 +1,5 @@
-import { Role } from "@/constants/type";
-import { OrderSchema } from "@/schemaValidations/order.schema";
+import { Role } from "src/constants/type";
+import { OrderSchema } from "src/schemaValidations/order.schema";
 import z from "zod";
 
 export const GuestLoginBody = z

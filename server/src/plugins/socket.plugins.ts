@@ -1,9 +1,9 @@
-import { ManagerRoom, Role } from "@/constants/type";
-import prisma from "@/database";
-import { AuthError } from "@/utils/errors";
-import { getChalk } from "@/utils/helpers";
-import { verifyAccessToken } from "@/utils/jwt";
 import fastifyPlugin from "fastify-plugin";
+import { ManagerRoom, Role } from "src/constants/type";
+import prisma from "src/database";
+import { AuthError } from "src/utils/errors";
+import { getChalk } from "src/utils/helpers";
+import { verifyAccessToken } from "src/utils/jwt";
 
 export const socketPlugin = fastifyPlugin(async (fastify) => {
   const chalk = await getChalk();

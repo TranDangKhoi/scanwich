@@ -1,5 +1,5 @@
-import prisma from "@/database";
-import { CreateDishBodyType, UpdateDishBodyType } from "@/schemaValidations/dish.schema";
+import prisma from "src/database";
+import { CreateDishBodyType, UpdateDishBodyType } from "src/schemaValidations/dish.schema";
 
 export const getDishList = () => {
   return prisma.dish.findMany({

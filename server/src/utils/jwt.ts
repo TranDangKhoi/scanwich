@@ -1,8 +1,8 @@
-import envConfig from "@/config";
-import { TokenType } from "@/constants/type";
-import { TokenPayload } from "@/types/jwt.types";
 import { PrivateKey, SignerOptions, createSigner, createVerifier } from "fast-jwt";
 import ms from "ms";
+import envConfig from "src/config";
+import { TokenType } from "src/constants/type";
+import { TokenPayload } from "src/types/jwt.types";
 
 export const signAccessToken = (
   payload: Pick<TokenPayload, "userId" | "role"> & {

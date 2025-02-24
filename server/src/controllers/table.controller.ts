@@ -1,7 +1,7 @@
-import prisma from "@/database";
-import { CreateTableBodyType, UpdateTableBodyType } from "@/schemaValidations/table.schema";
-import { EntityError, isPrismaClientKnownRequestError } from "@/utils/errors";
-import { randomId } from "@/utils/helpers";
+import prisma from "src/database";
+import { CreateTableBodyType, UpdateTableBodyType } from "src/schemaValidations/table.schema";
+import { EntityError, isPrismaClientKnownRequestError } from "src/utils/errors";
+import { randomId } from "src/utils/helpers";
 
 export const getTableList = () => {
   return prisma.table.findMany({

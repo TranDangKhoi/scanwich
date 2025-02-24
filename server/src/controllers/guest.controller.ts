@@ -1,11 +1,11 @@
-import envConfig from "@/config";
-import { DishStatus, OrderStatus, Role, TableStatus } from "@/constants/type";
-import prisma from "@/database";
-import { GuestCreateOrdersBodyType, GuestLoginBodyType } from "@/schemaValidations/guest.schema";
-import { TokenPayload } from "@/types/jwt.types";
-import { AuthError, StatusError } from "@/utils/errors";
-import { signAccessToken, signRefreshToken, verifyRefreshToken } from "@/utils/jwt";
 import ms from "ms";
+import envConfig from "src/config";
+import { DishStatus, OrderStatus, Role, TableStatus } from "src/constants/type";
+import prisma from "src/database";
+import { GuestCreateOrdersBodyType, GuestLoginBodyType } from "src/schemaValidations/guest.schema";
+import { TokenPayload } from "src/types/jwt.types";
+import { AuthError, StatusError } from "src/utils/errors";
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from "src/utils/jwt";
 
 export const guestLoginController = async (body: GuestLoginBodyType) => {
   const table = await prisma.table.findUnique({

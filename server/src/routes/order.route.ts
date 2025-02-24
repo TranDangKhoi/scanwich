@@ -1,12 +1,13 @@
-import { ManagerRoom } from "@/constants/type";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { ManagerRoom } from "src/constants/type";
 import {
   createOrdersController,
   getOrderDetailController,
   getOrdersController,
   payOrdersController,
   updateOrderController,
-} from "@/controllers/order.controller";
-import { requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "@/hooks/auth.hooks";
+} from "src/controllers/order.controller";
+import { requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "src/hooks/auth.hooks";
 import {
   CreateOrdersBody,
   CreateOrdersBodyType,
@@ -28,8 +29,7 @@ import {
   UpdateOrderBodyType,
   UpdateOrderRes,
   UpdateOrderResType,
-} from "@/schemaValidations/order.schema";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+} from "src/schemaValidations/order.schema";
 
 export default async function orderRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.addHook(

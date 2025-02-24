@@ -1,11 +1,12 @@
-import envConfig from "@/config";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import envConfig from "src/config";
 import {
   loginController,
   loginGoogleController,
   logoutController,
   refreshTokenController,
-} from "@/controllers/auth.controller";
-import { requireLoginedHook } from "@/hooks/auth.hooks";
+} from "src/controllers/auth.controller";
+import { requireLoginedHook } from "src/hooks/auth.hooks";
 import {
   LoginBody,
   LoginBodyType,
@@ -19,9 +20,8 @@ import {
   RefreshTokenBodyType,
   RefreshTokenRes,
   RefreshTokenResType,
-} from "@/schemaValidations/auth.schema";
-import { MessageRes, MessageResType } from "@/schemaValidations/common.schema";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+} from "src/schemaValidations/auth.schema";
+import { MessageRes, MessageResType } from "src/schemaValidations/common.schema";
 export default async function authRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   const queryString = (await import("querystring")).default;
   fastify.post<{ Reply: MessageResType; Body: LogoutBodyType }>(

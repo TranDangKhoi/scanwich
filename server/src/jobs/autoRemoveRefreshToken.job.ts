@@ -1,5 +1,5 @@
-import prisma from "@/database";
 import { Cron } from "croner";
+import prisma from "src/database";
 
 // Cron pattern for every hour
 

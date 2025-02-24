@@ -1,10 +1,10 @@
-import { randomId } from "@/utils/helpers";
 import { MultipartFile } from "@fastify/multipart";
-import path from "path";
 import fs from "fs";
-import util from "util";
+import path from "path";
+import envConfig, { API_URL } from "src/config";
+import { randomId } from "src/utils/helpers";
 import { pipeline } from "stream";
-import envConfig, { API_URL } from "@/config";
+import util from "util";
 const pump = util.promisify(pipeline);
 
 export const uploadImage = async (data: MultipartFile) => {

@@ -1,12 +1,13 @@
-import { ManagerRoom, Role } from "@/constants/type";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { ManagerRoom, Role } from "src/constants/type";
 import {
   guestCreateOrdersController,
   guestGetOrdersController,
   guestLoginController,
   guestLogoutController,
   guestRefreshTokenController,
-} from "@/controllers/guest.controller";
-import { requireGuestHook, requireLoginedHook } from "@/hooks/auth.hooks";
+} from "src/controllers/guest.controller";
+import { requireGuestHook, requireLoginedHook } from "src/hooks/auth.hooks";
 import {
   LogoutBody,
   LogoutBodyType,
@@ -14,8 +15,8 @@ import {
   RefreshTokenBodyType,
   RefreshTokenRes,
   RefreshTokenResType,
-} from "@/schemaValidations/auth.schema";
-import { MessageRes, MessageResType } from "@/schemaValidations/common.schema";
+} from "src/schemaValidations/auth.schema";
+import { MessageRes, MessageResType } from "src/schemaValidations/common.schema";
 import {
   GuestCreateOrdersBody,
   GuestCreateOrdersBodyType,
@@ -27,8 +28,7 @@ import {
   GuestLoginBodyType,
   GuestLoginRes,
   GuestLoginResType,
-} from "@/schemaValidations/guest.schema";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+} from "src/schemaValidations/guest.schema";
 
 export default async function guestRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.post<{ Reply: GuestLoginResType; Body: GuestLoginBodyType }>(

@@ -1,8 +1,8 @@
-import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "@/hooks/auth.hooks";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import fastifyMultipart from "@fastify/multipart";
-import { uploadImage } from "@/controllers/media.controller";
-import { UploadImageRes, UploadImageResType } from "@/schemaValidations/media.schema";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { uploadImage } from "src/controllers/media.controller";
+import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "src/hooks/auth.hooks";
+import { UploadImageRes, UploadImageResType } from "src/schemaValidations/media.schema";
 
 export default async function mediaRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.register(fastifyMultipart);

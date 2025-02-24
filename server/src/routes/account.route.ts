@@ -1,4 +1,5 @@
-import { Role } from "@/constants/type";
+import { FastifyInstance, FastifyPluginOptions } from "fastify";
+import { Role } from "src/constants/type";
 import {
   changePasswordController,
   changePasswordV2Controller,
@@ -11,8 +12,8 @@ import {
   getMeController,
   updateEmployeeAccount,
   updateMeController,
-} from "@/controllers/account.controller";
-import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "@/hooks/auth.hooks";
+} from "src/controllers/account.controller";
+import { pauseApiHook, requireEmployeeHook, requireLoginedHook, requireOwnerHook } from "src/hooks/auth.hooks";
 import {
   AccountIdParam,
   AccountIdParamType,
@@ -40,8 +41,7 @@ import {
   UpdateEmployeeAccountBodyType,
   UpdateMeBody,
   UpdateMeBodyType,
-} from "@/schemaValidations/account.schema";
-import { FastifyInstance, FastifyPluginOptions } from "fastify";
+} from "src/schemaValidations/account.schema";
 
 export default async function accountRoutes(fastify: FastifyInstance, options: FastifyPluginOptions) {
   fastify.addHook("preValidation", fastify.auth([requireLoginedHook]));

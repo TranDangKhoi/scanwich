@@ -1,4 +1,4 @@
-import { Role, TokenType } from "@/constants/type";
+import { Role, TokenType } from "src/constants/type";
 
 export type TokenTypeValue = (typeof TokenType)[keyof typeof TokenType];
 export type RoleType = (typeof Role)[keyof typeof Role];

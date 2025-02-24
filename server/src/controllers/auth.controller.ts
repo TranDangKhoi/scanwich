@@ -1,11 +1,11 @@
-import envConfig from "@/config";
-import prisma from "@/database";
-import { LoginBodyType } from "@/schemaValidations/auth.schema";
-import { RoleType, TokenPayload } from "@/types/jwt.types";
-import { comparePassword } from "@/utils/crypto";
-import { AuthError, EntityError, StatusError } from "@/utils/errors";
-import { signAccessToken, signRefreshToken, verifyRefreshToken } from "@/utils/jwt";
 import axios from "axios";
+import envConfig from "src/config";
+import prisma from "src/database";
+import { LoginBodyType } from "src/schemaValidations/auth.schema";
+import { RoleType, TokenPayload } from "src/types/jwt.types";
+import { comparePassword } from "src/utils/crypto";
+import { AuthError, EntityError, StatusError } from "src/utils/errors";
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from "src/utils/jwt";
 
 export const logoutController = async (refreshToken: string) => {
   await prisma.refreshToken.delete({
