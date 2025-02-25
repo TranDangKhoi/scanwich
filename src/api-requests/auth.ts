@@ -1,5 +1,11 @@
 import http from "src/lib/http";
-import { TLoginBody, TLoginRes, TLogoutBody, TRefreshTokenBody } from "src/validations/auth.validations";
+import {
+  TLoginBody,
+  TLoginRes,
+  TLogoutBody,
+  TRefreshTokenBody,
+  TRefreshTokenRes,
+} from "src/validations/auth.validations";
 
 export const authApi = {
   login: (body: TLoginBody) => http.post<TLoginRes, TLoginBody>("/auth/login", body),
@@ -12,9 +18,10 @@ export const authApi = {
     http.post<any, TLogoutBody>("api/auth/logout", body, {
       baseUrl: "",
     }),
-  refreshToken: (body: TRefreshTokenBody) => http.post<any, TRefreshTokenBody>("/auth/refresh-token", body),
+  refreshToken: (body: TRefreshTokenBody) =>
+    http.post<TRefreshTokenRes, TRefreshTokenBody>("/auth/refresh-token", body),
   refreshTokenServerSide: (body: TRefreshTokenBody) =>
-    http.post<any, TRefreshTokenBody>("api/auth/refresh-token", body, {
+    http.post<TRefreshTokenRes, TRefreshTokenBody>("api/auth/refresh-token", body, {
       baseUrl: "",
     }),
 };
