@@ -1,3 +1,4 @@
+import { CircleCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter as FontSans } from "next/font/google";
@@ -24,14 +25,21 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+      <body className={cn("bg-background font-sans antialiased", fontSans.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
           enableSystem
         >
           {children}
-          <Toaster />
+          <Toaster
+            gap={12}
+            icons={{
+              success: <CircleCheck />,
+            }}
+            richColors
+            closeButton
+          />
         </ThemeProvider>
       </body>
     </html>
