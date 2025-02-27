@@ -1,9 +1,10 @@
 import { Menu, Package2 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import NavItems from "src/app/(public)/components/nav-items";
 import { Button } from "src/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "src/components/ui/sheet";
-
+import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
 export default function NavigationBar() {
   return (
     <>
@@ -12,7 +13,13 @@ export default function NavigationBar() {
           href="#"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Package2 className="h-6 w-6" />
+          <Image
+            src={ScanwichLogo}
+            alt="Scanwich Logo"
+            width={24}
+            height={24}
+            quality={100}
+          ></Image>
           <span className="sr-only">Scanwich</span>
         </Link>
         <NavItems className="text-muted-foreground transition-colors hover:text-foreground flex-shrink-0" />

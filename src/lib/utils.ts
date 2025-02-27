@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
-import { UseFormSetError, UseFormStateProps } from "react-hook-form";
+import { UseFormSetError } from "react-hook-form";
 import { toast } from "sonner";
 import { UnprocessableEntityError } from "src/lib/http";
 import { twMerge } from "tailwind-merge";
@@ -8,8 +8,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function calculateExpiresIn(tokenExpires: number) {
-  return new Date(tokenExpires * 1000);
+export function calculateCookieExpires(cookieExpireTimestamp: number) {
+  return new Date(cookieExpireTimestamp * 1000);
 }
 
 export function handleErrorApi({

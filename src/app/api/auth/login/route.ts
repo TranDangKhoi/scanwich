@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { authApi } from "src/api-requests/auth";
 import { MESSAGES } from "src/constants/messages.constants";
 import { HttpError } from "src/lib/http";
-import { calculateExpiresIn as calculateCookieExpires } from "src/lib/utils";
+import { calculateCookieExpires } from "src/lib/utils";
 import { TLoginBody } from "src/validations/auth.validations";
 
 export async function POST(request: Request) {

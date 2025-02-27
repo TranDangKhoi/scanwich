@@ -29,7 +29,7 @@ export default function LoginForm() {
     mutationFn: (body: TLoginBody) => authApi.loginServerSide(body),
   });
 
-  const handleLogin = loginForm.handleSubmit(async (data) => {
+  const handleLogin = loginForm.handleSubmit((data) => {
     loginMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Đăng nhập thành công");
@@ -42,7 +42,7 @@ export default function LoginForm() {
   });
 
   return (
-    <Card className="mx-auto max-w-sm mt-20">
+    <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Đăng nhập</CardTitle>
         <CardDescription>Nhập địa chỉ e-mail và mật khẩu của bạn để đăng nhập vào hệ thống</CardDescription>

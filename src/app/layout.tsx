@@ -5,7 +5,6 @@ import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "src/components/ui/sonner";
 import { cn } from "src/lib/utils";
 import "./globals.css";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import TanstackProvider from "src/providers/tanstack-provider";
 
 const fontSans = FontSans({
@@ -41,7 +40,6 @@ export default function RootLayout({
               richColors
               closeButton
             />
-            <ReactQueryDevtools />
           </ThemeProvider>
         </TanstackProvider>
       </body>
