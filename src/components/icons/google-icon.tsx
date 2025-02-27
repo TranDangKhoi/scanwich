@@ -1,8 +1,8 @@
 export default function GoogleIcon(props: JSX.IntrinsicElements["svg"]) {
   return (
     <svg
-      width={200}
-      height={200}
+      width={14}
+      height={14}
       viewBox="-3 0 262 262"
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid"

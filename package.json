@@ -19,6 +19,7 @@
     "click-to-react-component": "^1.1.2",
     "clsx": "^2.1.1",
     "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.475.0",
     "next": "14.2.24",
     "next-themes": "^0.4.4",
@@ -32,6 +33,7 @@
   },
   "devDependencies": {
     "@tanstack/react-query-devtools": "^5.66.9",
+    "@types/lodash": "^4.17.15",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
