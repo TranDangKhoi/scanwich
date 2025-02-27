@@ -17,7 +17,7 @@ function isAuthResponse(payload: unknown): payload is TLoginRes {
 
 // Vì chúng ta cần gọi API từ cả phía Next.js Server và một Server khác,
 // nên chúng ta cần sử dụng `RequestInit` kèm thêm `baseUrl`.
-// Nếu `baseUrl` là "" thì sử dụng baseUrl của client (localhost:3000),
+// Nếu `baseUrl` là "" thì sử dụng baseUrl của client (localhost:3002),
 // ngược lại thì sử dụng baseUrl của server (ví dụ: localhost:4000).
 type CustomOptions<TBody = unknown> = Omit<RequestInit, "method"> & {
   baseUrl?: string | undefined;
@@ -102,7 +102,7 @@ const request = async <TResponse, TBody = unknown>(
   }
 
   // Xác định baseUrl dựa trên giá trị truyền vào hoặc lấy từ cấu hình môi trường.
-  // Nếu `baseUrl` là "" thì sử dụng baseUrl của client (như hiện tại thì đang là localhost:3000),
+  // Nếu `baseUrl` là "" thì sử dụng baseUrl của client (như hiện tại thì đang là localhost:3002),
   // ngược lại thì sử dụng baseUrl của server (ví dụ: localhost:4000).
   const baseUrl = options?.baseUrl ?? parsedEnvData.NEXT_PUBLIC_API_URL;
 

@@ -85,9 +85,9 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/api/auth/login",
+              "raw": "localhost:3002/api/auth/login",
               "host": ["localhost"],
-              "port": "3000",
+              "port": "3002",
               "path": ["api", "auth", "login"]
             }
           },
@@ -108,9 +108,9 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/api/auth/logout",
+              "raw": "localhost:3002/api/auth/logout",
               "host": ["localhost"],
-              "port": "3000",
+              "port": "3002",
               "path": ["api", "auth", "logout"]
             }
           },
@@ -179,9 +179,9 @@
               }
             },
             "url": {
-              "raw": "localhost:3000/api/auth/refresh-token",
+              "raw": "localhost:3002/api/auth/refresh-token",
               "host": ["localhost"],
-              "port": "3000",
+              "port": "3002",
               "path": ["api", "auth", "refresh-token"]
             }
           },

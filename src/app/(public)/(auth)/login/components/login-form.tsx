@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { Button } from "src/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/components/ui/card";
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
@@ -9,7 +10,7 @@ import { Label } from "src/components/ui/label";
 import { loginBodySchema, TLoginBody } from "src/validations/auth.validations";
 
 export default function LoginForm() {
-  const form = useForm<TLoginBody>({
+  const loginForm = useForm<TLoginBody>({
     resolver: zodResolver(loginBodySchema),
     defaultValues: {
       email: "",
@@ -17,21 +18,26 @@ export default function LoginForm() {
     },
   });
 
+  const handleLogin = loginForm.handleSubmit(async (data) => {
+    toast.success("Đăng nhập thành công");
+  });
+
   return (
-    <Card className="mx-auto max-w-sm">
+    <Card className="mx-auto max-w-sm mt-20">
       <CardHeader>
         <CardTitle className="text-2xl">Đăng nhập</CardTitle>
-        <CardDescription>Nhập email và mật khẩu của bạn để đăng nhập vào hệ thống</CardDescription>
+        <CardDescription>Nhập địa chỉ e-mail và mật khẩu của bạn để đăng nhập vào hệ thống</CardDescription>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
+        <Form {...loginForm}>
           <form
             className="space-y-2 max-w-[600px] flex-shrink-0 w-full"
+            onSubmit={handleLogin}
             noValidate
           >
             <div className="grid gap-4">
               <FormField
-                control={form.control}
+                control={loginForm.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -50,7 +56,7 @@ export default function LoginForm() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={loginForm.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
