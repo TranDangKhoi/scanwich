@@ -1,11 +1,11 @@
 import { CircleCheck } from "lucide-react";
 import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
 import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "src/components/ui/sonner";
 import { cn } from "src/lib/utils";
 import "./globals.css";
 import TanstackProvider from "src/providers/tanstack-provider";
-import { ThemeProvider } from "src/providers/theme-provider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -22,7 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      suppressHydrationWarning
+    >
       <body className={cn("bg-background font-sans antialiased", fontSans.variable)}>
         <TanstackProvider>
           <ThemeProvider
