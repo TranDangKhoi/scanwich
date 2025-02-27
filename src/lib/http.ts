@@ -5,6 +5,16 @@ import { TLoginRes } from "src/validations/auth.validations";
 
 const isClient = typeof window !== "undefined";
 
+function isAuthResponse(payload: unknown): payload is TLoginRes {
+  return (
+    typeof payload === "object" &&
+    payload !== null &&
+    typeof (payload as any).data === "object" &&
+    "accessToken" in (payload as any).data &&
+    "refreshToken" in (payload as any).data
+  );
+}
+
 // Vì chúng ta cần gọi API từ cả phía Next.js Server và một Server khác,
 // nên chúng ta cần sử dụng `RequestInit` kèm thêm `baseUrl`.
 // Nếu `baseUrl` là "" thì sử dụng baseUrl của client (localhost:3000),
@@ -159,8 +169,8 @@ const request = async <TResponse, TBody = unknown>(
   // Cập nhật token phiên đăng nhập nếu yêu cầu liên quan đến đăng nhập/đăng ký.
   // Đảm bảo logic ở trong `if` chỉ chạy ở phía browser (client)
   if (isClient) {
-    if (["api/auth/login", "api/auth/register"].some((path) => path === url)) {
-      const { accessToken, refreshToken } = (payload as TLoginRes).data;
+    if (["api/auth/login", "api/auth/register"].some((path) => path === url) && isAuthResponse(payload)) {
+      const { accessToken, refreshToken } = payload.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
     } else if ("/auth/logout".includes(url)) {
