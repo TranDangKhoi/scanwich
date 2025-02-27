@@ -5,6 +5,8 @@ import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "src/components/ui/sonner";
 import { cn } from "src/lib/utils";
 import "./globals.css";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import TanstackProvider from "src/providers/tanstack-provider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -26,21 +28,22 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={cn("bg-background font-sans antialiased", fontSans.variable)}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-        >
-          {children}
-          <Toaster
-            gap={12}
-            icons={{
-              success: <CircleCheck />,
-            }}
-            richColors
-            closeButton
-          />
-        </ThemeProvider>
+        <TanstackProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+          >
+            {children}
+            <Toaster
+              gap={12}
+              icons={{ success: <CircleCheck /> }}
+              richColors
+              closeButton
+            />
+            <ReactQueryDevtools />
+          </ThemeProvider>
+        </TanstackProvider>
       </body>
     </html>
   );

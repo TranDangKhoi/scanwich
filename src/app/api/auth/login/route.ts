@@ -38,9 +38,14 @@ export async function POST(request: Request) {
         status: error.status,
       });
     } else {
-      return Response.json({
-        message: MESSAGES.DEFAULT_SOMETHING_WENT_WRONG,
-      });
+      return Response.json(
+        {
+          message: MESSAGES.DEFAULT_SOMETHING_WENT_WRONG,
+        },
+        {
+          status: 500,
+        },
+      );
     }
   }
 }

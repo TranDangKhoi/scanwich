@@ -1,15 +1,21 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { authApi } from "src/api-requests/auth";
+import GoogleIcon from "src/components/icons/google-icon";
 import { Button } from "src/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/components/ui/card";
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
+import { handleErrorApi } from "src/lib/utils";
 import { loginBodySchema, TLoginBody } from "src/validations/auth.validations";
 
 export default function LoginForm() {
+  const router = useRouter();
   const loginForm = useForm<TLoginBody>({
     resolver: zodResolver(loginBodySchema),
     defaultValues: {
@@ -18,8 +24,20 @@ export default function LoginForm() {
     },
   });
 
+  const loginMutation = useMutation({
+    mutationKey: ["login"],
+    mutationFn: (body: TLoginBody) => authApi.loginServerSide(body),
+  });
+
   const handleLogin = loginForm.handleSubmit(async (data) => {
-    toast.success("Đăng nhập thành công");
+    loginMutation.mutate(data, {
+      onSuccess: () => {
+        toast.success("Đăng nhập thành công");
+      },
+      onError(error) {
+        handleErrorApi({ error, setError: loginForm.setError });
+      },
+    });
   });
 
   return (
@@ -86,7 +104,8 @@ export default function LoginForm() {
                 className="w-full"
                 type="button"
               >
-                Đăng nhập bằng Google
+                <span>Đăng nhập bằng Google</span>
+                <GoogleIcon></GoogleIcon>
               </Button>
             </div>
           </form>
