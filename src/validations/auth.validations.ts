@@ -1,4 +1,4 @@
-import { ROLE } from "src/constants/types.constants.ts";
+import { ROLE } from "src/constants/types.constants";
 import z from "zod";
 
 export const loginBodySchema = z

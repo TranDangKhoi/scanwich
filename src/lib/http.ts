@@ -169,7 +169,7 @@ const request = async <TResponse, TBody = unknown>(
   // Cập nhật token phiên đăng nhập nếu yêu cầu liên quan đến đăng nhập/đăng ký.
   // Đảm bảo logic ở trong `if` chỉ chạy ở phía browser (client)
   if (isClient) {
-    if (["api/auth/login", "api/auth/register"].some((path) => path === url) && isAuthResponse(payload)) {
+    if (["/api/auth/login", "/api/auth/register"].some((path) => path === url) && isAuthResponse(payload)) {
       const { accessToken, refreshToken } = payload.data;
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);

@@ -1,4 +1,4 @@
-import { ROLE } from "src/constants/types.constants.ts";
+import { ROLE } from "src/constants/types.constants";
 import { orderSchema } from "src/validations/order.validations";
 import z from "zod";
 

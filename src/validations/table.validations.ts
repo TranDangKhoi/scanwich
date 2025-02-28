@@ -1,4 +1,4 @@
-import { TABLE_STATUS_VALUES } from "src/constants/types.constants.ts";
+import { TABLE_STATUS_VALUES } from "src/constants/types.constants";
 import z from "zod";
 
 export const createTableBody = z.object({
