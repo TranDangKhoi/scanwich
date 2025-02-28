@@ -29,13 +29,16 @@ export default function AppSidebar() {
             <span className="sr-only">Scanwich</span>
           </Link>
 
-          {menuItems.map((Item, index) => {
-            const isActive = pathname === Item.href;
+          {menuItems.map((item, index) => {
+            const isActive = pathname === item.href;
             return (
-              <Tooltip key={index}>
+              <Tooltip
+                delayDuration={150}
+                key={index}
+              >
                 <TooltipTrigger asChild>
                   <Link
-                    href={Item.href}
+                    href={item.href}
                     className={cn(
                       "flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8",
                       {
@@ -44,11 +47,11 @@ export default function AppSidebar() {
                       },
                     )}
                   >
-                    <Item.Icon className="h-5 w-5" />
-                    <span className="sr-only">{Item.title}</span>
+                    <item.Icon className="h-5 w-5" />
+                    <span className="sr-only">{item.title}</span>
                   </Link>
                 </TooltipTrigger>
-                <TooltipContent side="right">{Item.title}</TooltipContent>
+                <TooltipContent side="right">{item.title}</TooltipContent>
               </Tooltip>
             );
           })}
