@@ -31,7 +31,7 @@ export default function MobileSidebar() {
         <nav className="grid gap-6 text-lg font-medium">
           <Link
             href={PATH.DASHBOARD}
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:text-base"
           >
             <Image
               src={ScanwichLogo}
