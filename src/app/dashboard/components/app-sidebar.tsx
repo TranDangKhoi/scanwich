@@ -2,9 +2,12 @@
 import menuItems from "src/app/dashboard/menu-items";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "src/components/ui/tooltip";
 import { cn } from "src/lib/utils";
-import { Package2, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
+import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
+import { PATH } from "src/constants/path.constants";
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -13,10 +16,16 @@ export default function AppSidebar() {
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
         <nav className="flex flex-col items-center gap-4 px-2 py-4">
           <Link
-            href="#"
+            href={PATH.DASHBOARD}
             className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
           >
-            <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
+            <Image
+              src={ScanwichLogo}
+              alt="Scanwich Logo"
+              width={16}
+              height={16}
+              className="transition-all group-hover:scale-110"
+            />
             <span className="sr-only">Scanwich</span>
           </Link>
 
