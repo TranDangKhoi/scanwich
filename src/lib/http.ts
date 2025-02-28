@@ -77,6 +77,38 @@ export class UnauthorizedError extends HttpError {
   }
 }
 
+class AccessToken {
+  private accessToken = "";
+  get value() {
+    return this.accessToken;
+  }
+  set value(accessToken: string) {
+    // Nếu gọi method này ở server thì sẽ bị lỗi
+    if (typeof window === "undefined") {
+      throw new Error("Cannot set accessToken on server side");
+    }
+    this.accessToken = accessToken;
+  }
+}
+
+export const clientAccessToken = new AccessToken();
+
+class RefreshToken {
+  private refreshToken = "";
+  get value() {
+    return this.refreshToken;
+  }
+  set value(refreshToken: string) {
+    // Nếu gọi method này ở server thì sẽ bị lỗi
+    if (typeof window === "undefined") {
+      throw new Error("Cannot set refreshToken on server side");
+    }
+    this.refreshToken = refreshToken;
+  }
+}
+
+export const clientRefreshToken = new RefreshToken();
+
 // Hàm `request` là hàm chính để thực hiện các yêu cầu HTTP.
 // Nó hỗ trợ các phương thức GET, POST, PUT, DELETE và xử lý các lỗi HTTP.
 const request = async <TResponse, TBody = unknown>(
@@ -94,7 +126,8 @@ const request = async <TResponse, TBody = unknown>(
 
   // Nếu có token trong localStorage, thêm vào header Authorization.
   if (isClient) {
-    const accessToken = localStorage.getItem("accessToken");
+    // const accessToken = localStorage.getItem("accessToken");
+    const accessToken = clientAccessToken.value;
     baseHeaders = {
       ...baseHeaders,
       ...(accessToken && { Authorization: `Bearer ${accessToken}` }),
@@ -130,7 +163,8 @@ const request = async <TResponse, TBody = unknown>(
 
   let stillHavingToken = false;
   if (isClient) {
-    stillHavingToken = !!localStorage.getItem("accessToken");
+    // stillHavingToken = !!localStorage.getItem("accessToken");
+    stillHavingToken = !!clientAccessToken.value;
   }
 
   // Xử lý lỗi nếu yêu cầu không thành công.
@@ -152,8 +186,11 @@ const request = async <TResponse, TBody = unknown>(
             ...baseHeaders,
           },
         }).finally(() => {
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
+          // Đăng xuất thành công thì xóa token trong localStorage và chuyển hướng người dùng đến trang đăng nhập.
+          // localStorage.removeItem("accessToken");
+          // localStorage.removeItem("refreshToken");
+          clientAccessToken.value = "";
+          clientRefreshToken.value = "";
           window.location.href = "/login";
         });
       } else {
@@ -171,12 +208,17 @@ const request = async <TResponse, TBody = unknown>(
   if (isClient) {
     if (["/api/auth/login", "/api/auth/register"].some((path) => path === url) && isAuthResponse(payload)) {
       const { accessToken, refreshToken } = payload.data;
-      localStorage.setItem("accessToken", accessToken);
-      localStorage.setItem("refreshToken", refreshToken);
+      // localStorage.setItem("accessToken", accessToken);
+      // localStorage.setItem("refreshToken", refreshToken);
+      clientAccessToken.value = accessToken;
+      clientRefreshToken.value = refreshToken;
     } else if ("/auth/logout".includes(url)) {
       // Xóa token nếu yêu cầu là đăng xuất.
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+      // localStorage.removeItem("accessToken");
+      // localStorage.removeItem("refreshToken");
+
+      clientAccessToken.value = "";
+      clientRefreshToken.value = "";
     }
   }
 

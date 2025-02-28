@@ -2,36 +2,40 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getAccessTokenFromLS } from "src/lib/auth";
+import { PATH } from "src/constants/path.constants";
+import { clientAccessToken } from "src/lib/http";
 
 const menuItems = [
   {
     title: "Món ăn",
-    href: "/menu",
+    href: PATH.MENU,
     public: true,
   },
   {
     title: "Đơn hàng",
-    href: "/orders",
+    href: PATH.ORDERS,
     public: true,
   },
   {
     title: "Đăng nhập",
-    href: "/login",
+    href: PATH.LOGIN,
     guestOnly: true,
   },
   {
     title: "Quản lý",
-    href: "/manage/dashboard",
+    href: PATH.DASHBOARD_MANAGE,
     authRequired: true, // Khi chưa đăng nhập thì sẽ không hiển thị
   },
 ];
 
 export default function NavItems({ className }: { className?: string }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
-    setIsAuthenticated(Boolean(getAccessTokenFromLS()));
+    const accessToken = clientAccessToken.value;
+    setIsAuthenticated(!!accessToken);
   }, []);
+
   return menuItems
     .filter((item) => {
       if (item.public) return true;
