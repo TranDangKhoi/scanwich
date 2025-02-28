@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 const guestOnlyPaths = ["/login"];
 
 // Paths that you can navigate to at anytime
-const publicPaths = ["/products", "/"];
+const publicPaths = ["/"];
 
 // Paths that require authentication
-const authRequiredPaths = ["/profile", "/logout", "/products/add"];
+const authRequiredPaths = ["/dashboard"];
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;

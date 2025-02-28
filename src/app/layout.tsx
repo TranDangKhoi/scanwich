@@ -6,6 +6,8 @@ import { Toaster } from "src/components/ui/sonner";
 import { cn } from "src/lib/utils";
 import "./globals.css";
 import TanstackProvider from "src/providers/tanstack-provider";
+import AuthProvider from "src/providers/auth-provider";
+import { cookies } from "next/headers";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -21,24 +23,32 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value as string;
+  const refreshToken = cookieStore.get("refreshToken")?.value as string;
   return (
     <html lang="en">
       <body className={cn("bg-background font-sans antialiased", fontSans.variable)}>
-        <TanstackProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-          >
-            {children}
-            <Toaster
-              gap={12}
-              icons={{ success: <CircleCheck /> }}
-              richColors
-              closeButton
-            />
-          </ThemeProvider>
-        </TanstackProvider>
+        <AuthProvider
+          initialAccessToken={accessToken}
+          initialRefreshToken={refreshToken}
+        >
+          <TanstackProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+            >
+              {children}
+              <Toaster
+                gap={12}
+                icons={{ success: <CircleCheck /> }}
+                richColors
+                closeButton
+              />
+            </ThemeProvider>
+          </TanstackProvider>
+        </AuthProvider>
       </body>
     </html>
   );
