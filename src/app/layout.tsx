@@ -2,12 +2,12 @@ import { CircleCheck } from "lucide-react";
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter as FontSans } from "next/font/google";
+import { cookies } from "next/headers";
 import { Toaster } from "src/components/ui/sonner";
 import { cn } from "src/lib/utils";
-import "./globals.css";
-import TanstackProvider from "src/providers/tanstack-provider";
 import AuthProvider from "src/providers/auth-provider";
-import { cookies } from "next/headers";
+import TanstackProvider from "src/providers/tanstack-provider";
+import "./globals.css";
 
 const fontSans = FontSans({
   subsets: ["latin"],

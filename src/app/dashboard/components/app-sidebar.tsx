@@ -1,13 +1,13 @@
 "use client";
-import menuItems from "src/app/dashboard/menu-items";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "src/components/ui/tooltip";
-import { cn } from "src/lib/utils";
 import { Settings } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
+import menuItems from "src/app/dashboard/menu-items";
 import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "src/components/ui/tooltip";
 import { PATH } from "src/constants/path.constants";
+import { cn } from "src/lib/utils";
 
 export default function AppSidebar() {
   const pathname = usePathname();

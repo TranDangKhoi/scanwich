@@ -2,9 +2,9 @@ import { Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import NavItems from "src/app/(public)/components/nav-items";
+import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
 import { Button } from "src/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "src/components/ui/sheet";
-import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
 import { PATH } from "src/constants/path.constants";
 export default function NavigationBar() {
   return (

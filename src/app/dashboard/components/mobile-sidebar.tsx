@@ -1,14 +1,14 @@
 "use client";
-import menuItems from "src/app/dashboard/menu-items";
-import { Button } from "src/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "src/components/ui/sheet";
-import { cn } from "src/lib/utils";
 import { PanelLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
+import menuItems from "src/app/dashboard/menu-items";
 import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
+import { Button } from "src/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "src/components/ui/sheet";
 import { PATH } from "src/constants/path.constants";
+import { cn } from "src/lib/utils";
 
 export default function MobileSidebar() {
   const pathname = usePathname();
