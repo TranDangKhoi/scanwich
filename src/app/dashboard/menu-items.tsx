@@ -1,10 +1,11 @@
-import { Home, LineChart, ShoppingCart, Users2, Salad, Table } from "lucide-react";
+import { Home, LineChart, Salad, ShoppingCart, Table, Users2 } from "lucide-react";
+import { PATH } from "src/constants/path.constants";
 
 const menuItems = [
   {
     title: "Dashboard",
     Icon: Home,
-    href: "/manage/dashboard",
+    href: PATH.DASHBOARD_MANAGE,
   },
   {
     title: "Đơn hàng",

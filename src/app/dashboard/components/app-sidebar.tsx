@@ -60,12 +60,12 @@ export default function AppSidebar() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                href="/manage/setting"
+                href={PATH.DASHBOARD_SETTINGS}
                 className={cn(
                   "flex h-9 w-9 items-center justify-center rounded-lg  transition-colors hover:text-foreground md:h-8 md:w-8",
                   {
-                    "bg-accent text-accent-foreground": pathname === "/manage/setting",
-                    "text-muted-foreground": pathname !== "/manage/setting",
+                    "bg-accent text-accent-foreground": pathname === PATH.DASHBOARD_SETTINGS,
+                    "text-muted-foreground": pathname !== PATH.DASHBOARD_SETTINGS,
                   },
                 )}
               >
