@@ -13,7 +13,12 @@ export const authApi = {
     http.post<TLoginRes, TLoginBody>("/api/auth/login", body, {
       baseUrl: "",
     }),
-  logout: (body: TLogoutBody) => http.post<any, TLogoutBody>("/auth/logout", body),
+  logout: (body: TLogoutBody, accessToken: string) =>
+    http.post<any, TLogoutBody>("/auth/logout", body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }),
   logoutServerSide: (body: TLogoutBody) =>
     http.post<any, TLogoutBody>("/api/auth/logout", body, {
       baseUrl: "",

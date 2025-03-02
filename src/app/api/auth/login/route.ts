@@ -1,6 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
-import { authApi } from "src/api-requests/auth";
+import { authApi } from "src/api-requests/auth.apis.";
 import { MESSAGES } from "src/constants/messages.constants";
 import { HttpError } from "src/lib/http";
 import { calculateCookieExpires } from "src/lib/utils";
