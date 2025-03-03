@@ -23,8 +23,16 @@ export async function POST(request: Request) {
     );
   }
   try {
-    await authApi.logout(body, accessToken);
-  } catch (err) {
+    const { message } = await authApi.logout(body, accessToken);
+    return NextResponse.json(
+      {
+        message,
+      },
+      {
+        status: 200,
+      },
+    );
+  } catch {
     return NextResponse.json(
       {
         message: "Đăng xuất xảy ra với cảnh báo",

@@ -1,4 +1,11 @@
 "use client";
+import { useMutation } from "@tanstack/react-query";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { authApi } from "src/api-requests/auth.apis.";
+import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
+import { Button } from "src/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,10 +14,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "src/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
-import { Button } from "src/components/ui/button";
-import Link from "next/link";
 import { PATH } from "src/constants/path.constants";
+import { clientRefreshToken } from "src/lib/http";
+import { TLogoutBody } from "src/validations/auth.validations";
 
 const account = {
   name: "Nguyễn Văn A",
@@ -18,6 +24,25 @@ const account = {
 };
 
 export default function DropdownAvatar() {
+  const router = useRouter();
+  const logoutMutation = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: (body: TLogoutBody) => authApi.logoutServerSide(body),
+  });
+
+  const handleLogout = () => {
+    logoutMutation.mutate(
+      {
+        refreshToken: clientRefreshToken.value,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Đăng xuất thành công");
+          router.push(PATH.LOGIN);
+        },
+      },
+    );
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -48,7 +73,7 @@ export default function DropdownAvatar() {
         </DropdownMenuItem>
         <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Đăng xuất</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
