@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   if (!accessToken || !refreshToken) {
     return NextResponse.json(
       {
-        message: "Cái đ*t, bạn còn không có accessToken và refreshToken thì làm sao mà tôi đăng xuất được",
+        message: "Tôi cảnh cáo bạn nhé, tôi thấy bạn đang không có token đâu, nhưng tôi vẫn đăng xuất cho bạn đấy",
       },
       {
         status: 200,
