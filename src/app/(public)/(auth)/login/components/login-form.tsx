@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/c
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
+import { PATH } from "src/constants/path.constants";
 import { handleErrorApi } from "src/lib/utils";
 import { loginBodySchema, TLoginBody } from "src/validations/auth.validations";
 
@@ -33,7 +34,7 @@ export default function LoginForm() {
     loginMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Đăng nhập thành công");
-        router.push("/");
+        router.push(PATH.HOMEPAGE);
       },
       onError(error) {
         handleErrorApi({ error, setError: loginForm.setError });

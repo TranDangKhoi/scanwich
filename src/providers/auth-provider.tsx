@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useState } from "react";
+import { createContext, ReactNode } from "react";
 import { clientAccessToken, clientRefreshToken } from "src/lib/http";
 import { TAccount } from "src/validations/account.validations";
 
@@ -10,13 +10,7 @@ type TAuthContext = {
 };
 
 export const AuthContext = createContext<TAuthContext>({
-  userProfile: {
-    avatar: "",
-    email: "",
-    id: 0,
-    name: "",
-    role: "Employee",
-  },
+  userProfile: null,
   setUserProfile: () => {},
 });
 
@@ -33,12 +27,12 @@ const AuthProvider = ({
     clientRefreshToken.value = initialRefreshToken;
     clientAccessToken.value = initialAccessToken;
   }
-  const [userProfile, setUserProfile] = useState<TAccount | null>(null);
+
   return (
     <AuthContext.Provider
       value={{
-        userProfile,
-        setUserProfile,
+        userProfile: null,
+        setUserProfile: () => {}, // Always null, only declared because prop "value" needs to have something passed in
       }}
     >
       {children}

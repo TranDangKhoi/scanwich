@@ -19,6 +19,7 @@ export const loginResSchema = z.object({
       name: z.string(),
       email: z.string(),
       role: z.enum([ROLE.Owner, ROLE.Employee]),
+      avatar: z.string().nullable(),
     }),
   }),
   message: z.string(),
