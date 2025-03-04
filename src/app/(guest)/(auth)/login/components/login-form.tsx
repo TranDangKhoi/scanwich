@@ -34,7 +34,7 @@ export default function LoginForm() {
     loginMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Đăng nhập thành công");
-        router.push(PATH.HOMEPAGE);
+        router.push(PATH.DASHBOARD_MANAGE);
       },
       onError(error) {
         handleErrorApi({ error, setError: loginForm.setError });

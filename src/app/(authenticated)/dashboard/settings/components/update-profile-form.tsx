@@ -1,7 +1,9 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Upload } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { accountApi } from "src/api-requests/accounts.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "src/components/ui/card";
@@ -11,12 +13,14 @@ import { Label } from "src/components/ui/label";
 import { TUpdateMeBody, updateMeBodySchema } from "src/validations/account.validations";
 
 export default function UpdateProfileForm() {
+  const { data: myProfileData } = useQuery({
+    queryKey: ["get-profile"],
+    queryFn: accountApi.getMyProfile,
+  });
+
   const updateProfileForm = useForm<TUpdateMeBody>({
     resolver: zodResolver(updateMeBodySchema),
-    defaultValues: {
-      name: "",
-      avatar: "",
-    },
+    defaultValues: {},
   });
 
   return (
@@ -38,8 +42,8 @@ export default function UpdateProfileForm() {
                   <FormItem>
                     <div className="flex gap-2 items-start justify-start">
                       <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
-                        <AvatarImage src={"Khoi"} />
-                        <AvatarFallback className="rounded-none">{"Khoi"}</AvatarFallback>
+                        <AvatarImage src={myProfileData?.payload.data.avatar ?? undefined} />
+                        <AvatarFallback className="rounded-none">{myProfileData?.payload.data.name}</AvatarFallback>
                       </Avatar>
                       <input
                         type="file"

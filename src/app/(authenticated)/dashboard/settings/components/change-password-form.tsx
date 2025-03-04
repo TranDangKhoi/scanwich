@@ -1,6 +1,9 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { accountApi } from "src/api-requests/accounts.apis";
 import { Button } from "src/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/components/ui/card";
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
@@ -18,11 +21,28 @@ export default function ChangePasswordForm() {
     },
   });
 
+  const changePasswordMutation = useMutation({
+    mutationKey: ["change-password"],
+    mutationFn: (body: TChangePasswordBody) => accountApi.changeMyPassword(body),
+  });
+
+  const handleChangePassword = changePasswordForm.handleSubmit((data) => {
+    changePasswordMutation.mutate(data, {
+      onSuccess: () => {
+        toast.success("Đổi mật khẩu thành công!");
+      },
+      onError: (err) => {
+        toast.error(err.message ?? "Đổi mật khẩu không thành công!");
+      },
+    });
+  });
+
   return (
     <Form {...changePasswordForm}>
       <form
-        noValidate
+        onSubmit={handleChangePassword}
         className="grid auto-rows-max items-start gap-4 md:gap-8"
+        noValidate
       >
         <Card
           className="overflow-hidden"
