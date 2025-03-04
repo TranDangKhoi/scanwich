@@ -1,4 +1,4 @@
-import NavigationBar from "src/app/(public)/(auth)/login/components/navigation-bar";
+import NavigationBar from "src/app/(guest)/(auth)/login/components/navigation-bar";
 import { ThemeToggle } from "src/components/ui/theme-toggle";
 
 export default function Layout({

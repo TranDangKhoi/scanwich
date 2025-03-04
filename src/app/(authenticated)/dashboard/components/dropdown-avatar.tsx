@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { accountApi } from "src/api-requests/accounts.apis";
 import { authApi } from "src/api-requests/auth.apis.";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
+import { Badge } from "src/components/ui/badge";
 import { Button } from "src/components/ui/button";
 import {
   DropdownMenu,
@@ -73,7 +74,10 @@ export default function DropdownAvatar() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>{myProfileData?.payload.data.name}</DropdownMenuLabel>
+        <DropdownMenuLabel className="flex items-center gap-2">
+          <span>{myProfileData?.payload.data.name}</span>
+          <Badge className="rounded-full">{myProfileData?.payload.data.role}</Badge>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <Link

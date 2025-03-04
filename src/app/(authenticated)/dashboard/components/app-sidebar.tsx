@@ -3,7 +3,7 @@ import { Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import menuItems from "src/app/dashboard/menu-items";
+import menuItems from "src/app/(authenticated)/dashboard/menu-items";
 import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "src/components/ui/tooltip";
 import { PATH } from "src/constants/path.constants";

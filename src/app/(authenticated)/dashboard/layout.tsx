@@ -1,6 +1,6 @@
-import AppSidebar from "src/app/dashboard/components/app-sidebar";
-import DropdownAvatar from "src/app/dashboard/components/dropdown-avatar";
-import MobileSidebar from "src/app/dashboard/components/mobile-sidebar";
+import AppSidebar from "src/app/(authenticated)/dashboard/components/app-sidebar";
+import DropdownAvatar from "src/app/(authenticated)/dashboard/components/dropdown-avatar";
+import MobileSidebar from "src/app/(authenticated)/dashboard/components/mobile-sidebar";
 import { ThemeToggle } from "src/components/ui/theme-toggle";
 
 export default function DashboardLayout({
