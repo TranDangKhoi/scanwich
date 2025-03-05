@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { accountApi } from "src/api-requests/accounts.apis";
+import { mediaApi } from "src/api-requests/media.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "src/components/ui/card";
@@ -39,6 +40,11 @@ export default function UpdateProfileForm() {
     mutationFn: (body: TUpdateMeBody) => accountApi.updateMyProfile(body),
   });
 
+  const uploadImageMutation = useMutation({
+    mutationKey: ["upload-image"],
+    mutationFn: (body: FormData) => mediaApi.uploadImage(body),
+  });
+
   useEffect(() => {
     if (myProfileData) {
       updateProfileForm.reset({
@@ -48,7 +54,15 @@ export default function UpdateProfileForm() {
     }
   }, [myProfileData, updateProfileForm]);
 
-  const handleUpdateProfile = updateProfileForm.handleSubmit((data) => {
+  const handleUpdateProfile = updateProfileForm.handleSubmit(async (data) => {
+    let newAvatar = null;
+    if (previewImageFile) {
+      const formData = new FormData();
+      formData.append("file", previewImageFile);
+      const result = await uploadImageMutation.mutateAsync(formData);
+      newAvatar = result.payload.data;
+    }
+
     updateProfileMutation.mutate(data, {
       onSuccess: (data) => {
         toast.success(data.message);
@@ -56,6 +70,15 @@ export default function UpdateProfileForm() {
       },
     });
   });
+
+  const handleReset = () => {
+    updateProfileForm.reset({
+      avatar: myProfileData?.payload.data.avatar ?? "",
+      name: myProfileData?.payload.data.name,
+    });
+    // Clear preview image
+    setPreviewImageFile(null);
+  };
 
   const previewAvatar = useMemo(() => {
     if (previewImageFile) {
@@ -69,6 +92,7 @@ export default function UpdateProfileForm() {
       <form
         className="grid auto-rows-max items-start gap-4 md:gap-8"
         onSubmit={handleUpdateProfile}
+        onReset={handleReset}
         noValidate
       >
         <Card x-chunk="dashboard-07-chunk-0">
