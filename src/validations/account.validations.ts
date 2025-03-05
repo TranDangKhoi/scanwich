@@ -80,7 +80,7 @@ export type TUpdateEmployeeAccountBody = z.TypeOf<typeof updateEmployeeAccountBo
 export const updateMeBodySchema = z
   .object({
     name: z.string().trim().min(2).max(256),
-    avatar: z.string().url().optional(),
+    avatar: z.string().url().optional().nullable(),
   })
   .strict();
 
