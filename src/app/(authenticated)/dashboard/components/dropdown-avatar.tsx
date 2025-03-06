@@ -1,8 +1,7 @@
 "use client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { toast } from "sonner";
 import { accountApi } from "src/api-requests/accounts.apis";
 import { authApi } from "src/api-requests/auth.apis.";
@@ -19,15 +18,15 @@ import {
 } from "src/components/ui/dropdown-menu";
 import { PATH } from "src/constants/path.constants";
 import { clientRefreshToken } from "src/lib/http";
+import { handleErrorApi } from "src/lib/utils";
 import { TLogoutBody } from "src/validations/auth.validations";
 
 export default function DropdownAvatar() {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { data: myProfileData } = useQuery({
     queryKey: ["get-profile"],
-    queryFn: () => accountApi.getMyProfile(),
-    staleTime: Infinity, // Keep the data fresh forever
+    queryFn: accountApi.getMyProfile,
+    refetchOnMount: true,
   });
 
   const logoutMutation = useMutation({
@@ -36,18 +35,23 @@ export default function DropdownAvatar() {
   });
 
   const handleLogout = () => {
-    logoutMutation.mutate(
-      {
-        refreshToken: clientRefreshToken.value,
-      },
-      {
-        onSuccess: () => {
-          queryClient.removeQueries({ queryKey: ["get-profile"] });
-          toast.success("Đăng xuất thành công");
-          router.push(PATH.LOGIN);
+    try {
+      logoutMutation.mutate(
+        {
+          refreshToken: clientRefreshToken.value,
         },
-      },
-    );
+        {
+          onSuccess: () => {
+            toast.success("Đăng xuất thành công");
+            router.push(PATH.LOGIN);
+          },
+        },
+      );
+    } catch (error) {
+      handleErrorApi({
+        error,
+      });
+    }
   };
 
   return (

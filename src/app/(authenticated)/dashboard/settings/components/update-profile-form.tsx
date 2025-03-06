@@ -68,7 +68,7 @@ export default function UpdateProfileForm() {
       updateProfileMutation.mutate(
         {
           name: data.name,
-          avatar: newAvatarUrl,
+          avatar: previewImageFile ? newAvatarUrl : defaultAvatarValues,
         },
         {
           onSuccess: (data) => {
