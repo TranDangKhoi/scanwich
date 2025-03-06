@@ -17,6 +17,10 @@ import { Label } from "src/components/ui/label";
 import { handleErrorApi } from "src/lib/utils";
 import { TUpdateMeBody, updateMeBodySchema } from "src/validations/account.validations";
 
+// LƯU Ý VỀ LOGIC Ở FILE NÀY:
+// - Khi người dùng tải ảnh lên, ảnh sẽ được lưu vào biến previewImageFile, lúc này thì ảnh sẽ vẫn ở dạng File và hiển thị dưới dạng preview thôi, chứ chưa tạo URL gì cho ảnh cả
+// - Khi người dùng submit form rồi, ảnh sẽ được lưu vào database dưới dạng URL rồi lúc này chúng ta sẽ dùng chính URL đó để hiển thị chính thức dưới dạng Avatar
+// Vì vậy nên mới sinh ra 2 types dành cho avatar là string | File
 export default function UpdateProfileForm() {
   const router = useRouter();
   const [previewImageFile, setPreviewImageFile] = useState<File | null>(null);
@@ -123,7 +127,7 @@ export default function UpdateProfileForm() {
                   <FormItem>
                     <div className="flex gap-2 items-start justify-start">
                       <Avatar className="shrink-0 rounded-md object-cover w-[100px] h-[100px]">
-                        <AvatarImage src={previewAvatar ?? undefined} />
+                        <AvatarImage src={(previewAvatar as string) ?? undefined} />
                         <AvatarFallback className="rounded-none font-bold flex items-center shrink-0 justify-center">
                           {myProfileData?.payload.data.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
@@ -137,7 +141,7 @@ export default function UpdateProfileForm() {
                           const file = e.target.files?.[0];
                           if (file) {
                             setPreviewImageFile(file);
-                            field.onChange("http://localhost:3000/" + field.name);
+                            field.onChange(file);
                           }
                         }}
                       />

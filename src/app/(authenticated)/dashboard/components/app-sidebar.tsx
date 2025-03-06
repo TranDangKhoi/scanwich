@@ -22,9 +22,7 @@ export default function AppSidebar() {
             <Image
               src={ScanwichLogo}
               alt="Scanwich Logo"
-              width={24}
-              height={24}
-              className="transition-all group-hover:scale-110"
+              className="transition-all group-hover:scale-110 w-auto h-auto"
             />
             <span className="sr-only">Scanwich</span>
           </Link>

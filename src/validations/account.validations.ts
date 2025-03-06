@@ -84,7 +84,10 @@ export const updateMeBodySchema = z
       .trim()
       .min(2, "Tên người dùng cần có ít nhất hai ký tự")
       .max(256, "Tên người dùng không được vượt quá 256 ký tự"),
-    avatar: z.string().url().optional().nullable(),
+    avatar: z
+      .union([z.string().url(), z.instanceof(File)])
+      .optional()
+      .nullable(),
   })
   .strict();
 

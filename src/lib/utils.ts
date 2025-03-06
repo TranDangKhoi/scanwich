@@ -25,6 +25,7 @@ export function handleErrorApi({
 }) {
   if (error instanceof UnprocessableEntityError && setError) {
     const errors = error.payload.errors;
+    console.log(errors);
     errors.forEach((error) => {
       setError(error.field, {
         type: "server",

@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/c
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
+import { handleErrorApi } from "src/lib/utils";
 import { changePasswordBodySchema, TChangePasswordBody } from "src/validations/account.validations";
 
 export default function ChangePasswordForm() {
@@ -31,16 +32,25 @@ export default function ChangePasswordForm() {
       onSuccess: () => {
         toast.success("Đổi mật khẩu thành công!");
       },
-      onError: (err) => {
-        toast.error(err.message ?? "Đổi mật khẩu không thành công!");
+      onError: (error) => {
+        handleErrorApi({
+          error,
+          setError: changePasswordForm.setError,
+          defaultMessage: "Đổi mật khẩu thất bại thảm hại!",
+        });
       },
     });
   });
+
+  const handleReset = () => {
+    changePasswordForm.reset();
+  };
 
   return (
     <Form {...changePasswordForm}>
       <form
         onSubmit={handleChangePassword}
+        onReset={handleReset}
         className="grid auto-rows-max items-start gap-4 md:gap-8"
         noValidate
       >
@@ -55,6 +65,17 @@ export default function ChangePasswordForm() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {/* Don't know why but this input is to remove Chrome's warning message */}
+            {/* https://stackoverflow.com/questions/48525114/chrome-warning-dom-password-forms-should-have-optionally-hidden-username-fi */}
+            <Input
+              id="username"
+              name="username"
+              autoComplete="username"
+              value=""
+              className="hidden"
+              readOnly
+              hidden
+            />
             <div className="grid gap-6">
               <FormField
                 control={changePasswordForm.control}
@@ -67,6 +88,7 @@ export default function ChangePasswordForm() {
                         id="oldPassword"
                         type="password"
                         className="w-full"
+                        autoComplete="current-password"
                         {...field}
                       />
                       <FormMessage />
@@ -85,6 +107,7 @@ export default function ChangePasswordForm() {
                         id="password"
                         type="password"
                         className="w-full"
+                        autoComplete="new-password"
                         {...field}
                       />
                       <FormMessage />
@@ -103,6 +126,7 @@ export default function ChangePasswordForm() {
                         id="confirmPassword"
                         type="password"
                         className="w-full"
+                        autoComplete="new-password"
                         {...field}
                       />
                       <FormMessage />
@@ -113,6 +137,7 @@ export default function ChangePasswordForm() {
               <div className=" items-center gap-2 md:ml-auto flex">
                 <Button
                   variant="outline"
+                  type="reset"
                   size="sm"
                 >
                   Hủy
