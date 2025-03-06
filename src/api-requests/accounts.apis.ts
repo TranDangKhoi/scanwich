@@ -5,5 +5,5 @@ export const accountApi = {
   getMyProfile: () => http.get<TAccountRes>("/accounts/me"),
   updateMyProfile: (body: TUpdateMeBody) => http.put<TAccountRes, TUpdateMeBody>("/accounts/me", body),
   changeMyPassword: (body: TChangePasswordBody) =>
-    http.put<TAccountRes, TChangePasswordBody>("/accounts/me/password", body),
+    http.put<TAccountRes, TChangePasswordBody>("/accounts/change-password", body),
 };

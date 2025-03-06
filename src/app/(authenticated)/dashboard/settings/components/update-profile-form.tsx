@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "src/components/ui/card
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
+import { handleErrorApi } from "src/lib/utils";
 import { TUpdateMeBody, updateMeBodySchema } from "src/validations/account.validations";
 
 export default function UpdateProfileForm() {
@@ -28,7 +29,7 @@ export default function UpdateProfileForm() {
     },
   });
 
-  const { data: myProfileData } = useQuery({
+  const { data: myProfileData, refetch: myProfileDataRefetch } = useQuery({
     queryKey: ["get-profile"],
     queryFn: accountApi.getMyProfile,
   });
@@ -55,20 +56,34 @@ export default function UpdateProfileForm() {
   }, [myProfileData, updateProfileForm]);
 
   const handleUpdateProfile = updateProfileForm.handleSubmit(async (data) => {
-    let newAvatar = null;
-    if (previewImageFile) {
-      const formData = new FormData();
-      formData.append("file", previewImageFile);
-      const result = await uploadImageMutation.mutateAsync(formData);
-      newAvatar = result.payload.data;
-    }
+    let newAvatarUrl = null;
+    try {
+      if (previewImageFile) {
+        const formData = new FormData();
+        formData.append("file", previewImageFile);
+        const result = await uploadImageMutation.mutateAsync(formData);
+        newAvatarUrl = result.payload.data;
+      }
 
-    updateProfileMutation.mutate(data, {
-      onSuccess: (data) => {
-        toast.success(data.message);
-        router.refresh();
-      },
-    });
+      updateProfileMutation.mutate(
+        {
+          name: data.name,
+          avatar: newAvatarUrl,
+        },
+        {
+          onSuccess: (data) => {
+            toast.success(data.message);
+            myProfileDataRefetch();
+            router.refresh();
+          },
+        },
+      );
+    } catch (error) {
+      handleErrorApi({
+        error,
+        defaultMessage: "Có lỗi xảy ra khi cập nhật thông tin cá nhân",
+      });
+    }
   });
 
   const handleReset = () => {
@@ -95,7 +110,7 @@ export default function UpdateProfileForm() {
         onReset={handleReset}
         noValidate
       >
-        <Card x-chunk="dashboard-07-chunk-0">
+        <Card>
           <CardHeader>
             <CardTitle>Thông tin cá nhân</CardTitle>
           </CardHeader>
@@ -107,9 +122,9 @@ export default function UpdateProfileForm() {
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex gap-2 items-start justify-start">
-                      <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cove">
+                      <Avatar className="shrink-0 rounded-md object-cover w-[100px] h-[100px]">
                         <AvatarImage src={previewAvatar ?? undefined} />
-                        <AvatarFallback className="rounded-none font-bold">
+                        <AvatarFallback className="rounded-none font-bold flex items-center shrink-0 justify-center">
                           {myProfileData?.payload.data.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -122,7 +137,7 @@ export default function UpdateProfileForm() {
                           const file = e.target.files?.[0];
                           if (file) {
                             setPreviewImageFile(file);
-                            field.onChange(file);
+                            field.onChange("http://localhost:3000/" + field.name);
                           }
                         }}
                       />

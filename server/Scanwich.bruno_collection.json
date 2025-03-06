@@ -1,0 +1,1588 @@
+{
+  "info": {
+    "name": "Scanwich",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "bruno",
+      "event": []
+    },
+    {
+      "name": "Account",
+      "item": [
+        {
+          "name": "Account Detail",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts/detail/8",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts",
+                "detail",
+                "8"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Account List",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Add Account",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Trần Đăng Khôi 2\",\n    \"email\": \"khoi2@gmail.com\",\n    \"password\": \"Toilaai@123\",\n    \"confirmPassword\": \"Toilaai@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// test('Đổi mật khẩu thành công', () => {",
+                  "//     expect(res.getStatus()).to.equal(200)",
+                  "// //     const body = JSON.parse(pm.request.body.raw)",
+                  "//     const password = body.password",
+                  "//     bru.setEnvVar('ownerPassword', password)",
+                  "// })"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts/change-password",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts",
+                "change-password"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"Toilaai@123\",\n  \"oldPassword\": \"Toilaai@123\",\n  \"confirmPassword\": \"Toilaai@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create Guest",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts/guests",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts",
+                "guests"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Đại Ca Khôi\",\n    \"tableNumber\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Edit Account",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts/detail/8",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts",
+                "detail",
+                "8"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Dư Thanh An 2\",\n    \"email\":\"duthanhan@gmail.com\",\n\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Guests List",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts/guests?fromDate=2024-07-12T14:20:42.799Z&toDate=2024-07-13T14:20:42.799Z",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts",
+                "guests?fromDate=2024-07-12T14:20:42.799Z&toDate=2024-07-13T14:20:42.799Z"
+              ],
+              "query": [
+                {
+                  "key": "fromDate",
+                  "value": "2024-07-12T14:20:42.799Z"
+                },
+                {
+                  "key": "toDate",
+                  "value": "2024-07-13T14:20:42.799Z"
+                }
+              ],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts/me",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update Me",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/accounts/me",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "accounts",
+                "me"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Trần Đăng Khôi\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Call logout to Route Handler",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "localhost:3000/api/auth/logout",
+              "protocol": "",
+              "host": [
+                "localhost:3000"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login Route Handler",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{nextHost}}/api/auth/login",
+              "protocol": "",
+              "host": [
+                "{{nextHost}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@order.com\",\n    \"password\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test('Login thành công', () => {",
+                  "    expect(res.getStatus()).to.equal(200)",
+                  "  const response = res.getBody()",
+                  "  const {accessToken, refreshToken} = response.data",
+                  "  bru.setEnvVar('accessToken', accessToken)",
+                  "  bru.setEnvVar('refreshToken', refreshToken)",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/auth/login",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"khoi@gmail.com\",\n    \"password\": \"Toilaai@123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/auth/logout",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Refresh Token to Route Handler",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "localhost:3000/api/auth/refresh-token",
+              "protocol": "",
+              "host": [
+                "localhost:3000"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh-token"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test('Refresh token thành công', () => {",
+                  "    expect(res.getStatus()).to.equal(200)",
+                  "  const response = res.getBody()",
+                  "  const {accessToken, refreshToken} = response.data",
+                  "  bru.setEnvVar('accessToken', accessToken)",
+                  "  bru.setEnvVar('refreshToken', refreshToken)",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/auth/refresh-token",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "auth",
+                "refresh-token"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Guest",
+      "item": [
+        {
+          "name": "Call logout to Route Handler",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{client}}/api/guest/auth/logout",
+              "protocol": "",
+              "host": [
+                "{{client}}"
+              ],
+              "path": [
+                "api",
+                "guest",
+                "auth",
+                "logout"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{guestRefreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Create orders",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/guest/orders",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "guest",
+                "orders"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "[\n    {\n        \"dishId\": 1,\n        \"quantity\": 2\n    },\n    {\n        \"dishId\": 2,\n        \"quantity\": 3\n    }\n]",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login Route Handler",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{client}}/api/guest/auth/login",
+              "protocol": "",
+              "host": [
+                "{{client}}"
+              ],
+              "path": [
+                "api",
+                "guest",
+                "auth",
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Trần Đăng Khôi\",\n    \"tableNumber\": 2,\n    \"token\": \"667f3b1ce5e4429990dacea1809d20e7\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test('Login thành công', () => {",
+                  "    expect(res.getStatus()).to.equal(200)",
+                  "  const response = res.getBody()",
+                  "  const {accessToken, refreshToken} = response.data",
+                  "  bru.setEnvVar('guestAccessToken', accessToken)",
+                  "  bru.setEnvVar('guestRefreshToken', refreshToken)",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/guest/auth/login",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "guest",
+                "auth",
+                "login"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Trần Đăng Khôi\",\n    \"tableNumber\": 2,\n    \"token\": \"667f3b1ce5e4429990dacea1809d20e7\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test('Logout thành công', () => {",
+                  "    expect(res.getStatus()).to.equal(200)",
+                  "  bru.setEnvVar('guestAccessToken', '')",
+                  "  bru.setEnvVar('guestRefreshToken', '')",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/guest/auth/logout",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "guest",
+                "auth",
+                "logout"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{guestRefreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Orders list",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/guest/orders",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "guest",
+                "orders"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Refresh Token to Route Handler",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{client}}/api/guest/auth/refresh-token",
+              "protocol": "",
+              "host": [
+                "{{client}}"
+              ],
+              "path": [
+                "api",
+                "guest",
+                "auth",
+                "refresh-token"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "test('Refresh token thành công', () => {",
+                  "    expect(res.getStatus()).to.equal(200)",
+                  "  const response = res.getBody()",
+                  "  const {accessToken, refreshToken} = response.data",
+                  "  bru.setEnvVar('guestAccessToken', accessToken)",
+                  "  bru.setEnvVar('guestRefreshToken', refreshToken)",
+                  "})"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{guestAccessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/guest/auth/refresh-token",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "guest",
+                "auth",
+                "refresh-token"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{guestRefreshToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dish",
+      "item": [
+        {
+          "name": "Add Dish",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/dishes",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "dishes"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bánh mì\",\n    \"price\": 30000,\n    \"description\": \"Bánh mì Việt Nam\",\n    \"image\": \"http://localhost:4000/static/12f883ababcf4ff6a15ccc87371bf3e1.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Dish",
+          "event": [],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/dishes/3",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "dishes",
+                "3"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get Dish Detail",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/dishes/3",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "dishes",
+                "3"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get Dishes",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/dishes",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "dishes"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update Dish",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/dishes/3",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "dishes",
+                "3"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Bánh mì\",\n    \"price\": 30000,\n    \"description\": \"Bánh mì Pháp\",\n    \"image\":  \"http://localhost:4000/static/12f883ababcf4ff6a15ccc87371bf3e1.jpg\",\n    \"status\": \"Hidden\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Indicator",
+      "item": [
+        {
+          "name": "Dashboard Indicator",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/indicators/dashboard?fromDate=2024-07-10T08:46:30.929Z&toDate=2024-07-19T08:46:30.929Z",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "indicators",
+                "dashboard?fromDate=2024-07-10T08:46:30.929Z&toDate=2024-07-19T08:46:30.929Z"
+              ],
+              "query": [
+                {
+                  "key": "fromDate",
+                  "value": "2024-07-10T08:46:30.929Z"
+                },
+                {
+                  "key": "toDate",
+                  "value": "2024-07-19T08:46:30.929Z"
+                }
+              ],
+              "variable": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Orders",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/orders",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "orders"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"guestId\": 84,\n    \"orders\": [\n        {\n            \"dishId\": 2,\n            \"quantity\": 1\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Order list",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/orders",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "orders"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Pay",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": ""
+            }
+          }
+        },
+        {
+          "name": "Update Order",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/orders/26",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "orders",
+                "26"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"Pending\",\n    \"dishId\": 2,\n    \"quantity\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Table",
+      "item": [
+        {
+          "name": "Add Table",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/tables",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "tables"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"number\": 1,\n   \"capacity\": 4,\n   \"status\": \"Available\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete Table",
+          "event": [],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/tables/2",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "tables",
+                "2"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get Table Detail",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/tables/1",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "tables",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Get Tables",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/tables",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "tables"
+              ],
+              "query": [],
+              "variable": []
+            }
+          }
+        },
+        {
+          "name": "Update Table",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/tables/1",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "tables",
+                "1"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n   \"capacity\": 4,\n   \"status\": \"Hidden\",\n   \"changeToken\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Media",
+      "item": [
+        {
+          "name": "Upload Image",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "key": "token",
+                "value": "{{accessToken}}",
+                "type": "string"
+              }
+            },
+            "description": "",
+            "url": {
+              "raw": "{{host}}/media/upload",
+              "protocol": "",
+              "host": [
+                "{{host}}"
+              ],
+              "path": [
+                "media",
+                "upload"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "value": [
+                    "/Users/duthanhduoc/Downloads/pexels-flodahm-1483769.jpg"
+                  ],
+                  "disabled": false,
+                  "type": "default"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "host",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "nextHost",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "client",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "guestAccessToken",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "guestRefreshToken",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

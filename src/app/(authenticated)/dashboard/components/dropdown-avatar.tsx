@@ -50,12 +50,6 @@ export default function DropdownAvatar() {
     );
   };
 
-  useEffect(() => {
-    if (myProfileData) {
-      console.log("Fetched successfully");
-    }
-  }, [myProfileData]);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

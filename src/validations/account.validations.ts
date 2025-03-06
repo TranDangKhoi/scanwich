@@ -79,7 +79,11 @@ export type TUpdateEmployeeAccountBody = z.TypeOf<typeof updateEmployeeAccountBo
 
 export const updateMeBodySchema = z
   .object({
-    name: z.string().trim().min(2).max(256),
+    name: z
+      .string()
+      .trim()
+      .min(2, "Tên người dùng cần có ít nhất hai ký tự")
+      .max(256, "Tên người dùng không được vượt quá 256 ký tự"),
     avatar: z.string().url().optional().nullable(),
   })
   .strict();
@@ -88,9 +92,18 @@ export type TUpdateMeBody = z.TypeOf<typeof updateMeBodySchema>;
 
 export const changePasswordBodySchema = z
   .object({
-    oldPassword: z.string().min(6).max(100),
-    password: z.string().min(6).max(100),
-    confirmPassword: z.string().min(6).max(100),
+    oldPassword: z
+      .string()
+      .min(6, "Mật khẩu cũ của bạn cần phải có nhiều hơn 6 ký tự")
+      .max(100, "Mật khẩu cũ của bạn không được vượt quá 100 ký tự"),
+    password: z
+      .string()
+      .min(6, "Mật khẩu mới cần phải có nhiều hơn 6 ký tự")
+      .max(100, "Mật khẩu mới không được vượt quá 100 ký tự"),
+    confirmPassword: z
+      .string()
+      .min(6, "Mật khẩu xác nhận cần phải có nhiều hơn 6 ký tự")
+      .max(100, "Mật khẩu xác nhận không được vượt quá 100 ký tự"),
   })
   .strict()
   .superRefine(({ confirmPassword, password }, ctx) => {
