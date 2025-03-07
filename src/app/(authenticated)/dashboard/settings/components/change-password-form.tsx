@@ -4,13 +4,16 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { accountApi } from "src/api-requests/accounts.apis";
+import { authApi } from "src/api-requests/auth.apis.";
 import { Button } from "src/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/components/ui/card";
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
+import { clientRefreshToken } from "src/lib/http";
 import { handleErrorApi } from "src/lib/utils";
 import { changePasswordBodySchema, TChangePasswordBody } from "src/validations/account.validations";
+import { TRefreshTokenBody } from "src/validations/auth.validations";
 
 export default function ChangePasswordForm() {
   const changePasswordForm = useForm<TChangePasswordBody>({
@@ -27,30 +30,36 @@ export default function ChangePasswordForm() {
     mutationFn: (body: TChangePasswordBody) => accountApi.changeMyPassword(body),
   });
 
-  const handleChangePassword = changePasswordForm.handleSubmit((data) => {
-    changePasswordMutation.mutate(data, {
-      onSuccess: () => {
-        toast.success("Đổi mật khẩu thành công!");
-      },
-      onError: (error) => {
-        handleErrorApi({
-          error,
-          setError: changePasswordForm.setError,
-          defaultMessage: "Đổi mật khẩu thất bại thảm hại!",
-        });
-      },
-    });
+  const refreshTokenMutation = useMutation({
+    mutationKey: ["refresh-token"],
+    mutationFn: (body: TRefreshTokenBody) => authApi.refreshTokenServerSide(body),
   });
 
-  const handleReset = () => {
+  const handleResetForm = () => {
     changePasswordForm.reset();
   };
+
+  const handleChangePassword = changePasswordForm.handleSubmit(async (data) => {
+    try {
+      console.log(clientRefreshToken.value);
+      await changePasswordMutation.mutateAsync(data);
+      await refreshTokenMutation.mutateAsync({ refreshToken: clientRefreshToken.value });
+      handleResetForm();
+      toast.success("Đổi mật khẩu thành công!");
+    } catch (error) {
+      handleErrorApi({
+        error,
+        setError: changePasswordForm.setError,
+        defaultMessage: "Đổi mật khẩu thất bại thảm hại!",
+      });
+    }
+  });
 
   return (
     <Form {...changePasswordForm}>
       <form
         onSubmit={handleChangePassword}
-        onReset={handleReset}
+        onReset={handleResetForm}
         className="grid auto-rows-max items-start gap-4 md:gap-8"
         noValidate
       >

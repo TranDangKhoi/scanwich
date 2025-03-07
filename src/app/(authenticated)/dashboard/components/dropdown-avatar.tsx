@@ -62,11 +62,11 @@ export default function DropdownAvatar() {
           size="icon"
           className="overflow-hidden rounded-full"
         >
-          <Avatar>
+          <Avatar className="w-full h-full">
             <AvatarImage
               src={myProfileData?.payload.data.avatar ?? undefined}
               alt={myProfileData?.payload.data.name}
-              className="object-cover object-top"
+              className="object-cover object-center"
             />
             <AvatarFallback>{myProfileData?.payload.data.name.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
