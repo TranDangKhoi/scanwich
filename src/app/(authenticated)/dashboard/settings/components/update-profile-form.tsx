@@ -1,8 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Upload } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,8 +21,8 @@ import { TUpdateMeBody, updateMeBodySchema } from "src/validations/account.valid
 // - Khi người dùng submit form rồi, ảnh sẽ được lưu vào database dưới dạng URL rồi lúc này chúng ta sẽ dùng chính URL đó để hiển thị chính thức dưới dạng Avatar
 // Vì vậy nên mới sinh ra 2 types dành cho avatar là string | File
 export default function UpdateProfileForm() {
-  const router = useRouter();
   const [previewImageFile, setPreviewImageFile] = useState<File | null>(null);
+  const queryClient = useQueryClient();
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const updateProfileForm = useForm<TUpdateMeBody>({
     resolver: zodResolver(updateMeBodySchema),
@@ -33,7 +32,7 @@ export default function UpdateProfileForm() {
     },
   });
 
-  const { data: myProfileData, refetch: myProfileDataRefetch } = useQuery({
+  const { data: profile } = useQuery({
     queryKey: ["get-profile"],
     queryFn: accountApi.getMyProfile,
   });
@@ -51,13 +50,13 @@ export default function UpdateProfileForm() {
   });
 
   useEffect(() => {
-    if (myProfileData) {
+    if (profile) {
       updateProfileForm.reset({
-        avatar: myProfileData?.payload.data.avatar ?? "",
-        name: myProfileData?.payload.data.name,
+        avatar: profile.payload.data.avatar ?? "",
+        name: profile.payload.data.name,
       });
     }
-  }, [myProfileData, updateProfileForm]);
+  }, [profile, updateProfileForm]);
 
   const handleUpdateProfile = updateProfileForm.handleSubmit(async (data) => {
     let newAvatarUrl = null;
@@ -72,13 +71,13 @@ export default function UpdateProfileForm() {
       updateProfileMutation.mutate(
         {
           name: data.name,
+          // Nếu người dùng không chọn ảnh nào thì sẽ giữ nguyên avatar cũ
           avatar: previewImageFile ? newAvatarUrl : defaultAvatarValues,
         },
         {
           onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ["get-profile"] });
             toast.success(data.message);
-            myProfileDataRefetch();
-            router.refresh();
           },
         },
       );
@@ -90,10 +89,10 @@ export default function UpdateProfileForm() {
     }
   });
 
-  const handleReset = () => {
+  const handleResetForm = () => {
     updateProfileForm.reset({
-      avatar: myProfileData?.payload.data.avatar ?? "",
-      name: myProfileData?.payload.data.name,
+      avatar: profile?.payload.data.avatar ?? "",
+      name: profile?.payload.data.name,
     });
     // Clear preview image
     setPreviewImageFile(null);
@@ -111,7 +110,7 @@ export default function UpdateProfileForm() {
       <form
         className="grid auto-rows-max items-start gap-4 md:gap-8"
         onSubmit={handleUpdateProfile}
-        onReset={handleReset}
+        onReset={handleResetForm}
         noValidate
       >
         <Card>
@@ -129,7 +128,7 @@ export default function UpdateProfileForm() {
                       <Avatar className="shrink-0 rounded-md object-cover w-[100px] h-[100px]">
                         <AvatarImage src={(previewAvatar as string) ?? undefined} />
                         <AvatarFallback className="rounded-none font-bold flex items-center shrink-0 justify-center">
-                          {myProfileData?.payload.data.name.slice(0, 2).toUpperCase()}
+                          {profile?.payload.data.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <input

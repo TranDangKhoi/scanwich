@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import parsedEnvData from "src/config";
 import { HTTP_STATUS_CODE } from "src/constants/httpStatusCode.constants";
-import { TLoginRes } from "src/validations/auth.validations";
+import { TLoginRes, TRefreshTokenRes } from "src/validations/auth.validations";
 
 const isClient = typeof window !== "undefined";
 
@@ -12,6 +12,16 @@ function isAuthResponse(payload: unknown): payload is TLoginRes {
     typeof (payload as any).data === "object" &&
     "accessToken" in (payload as any).data &&
     "refreshToken" in (payload as any).data
+  );
+}
+
+function isRefreshTokenResponse(payload: unknown): payload is TRefreshTokenRes {
+  return (
+    typeof payload === "object" &&
+    payload !== null &&
+    typeof (payload as any) === "object" &&
+    "accessToken" in (payload as any) &&
+    "refreshToken" in (payload as any)
   );
 }
 
@@ -206,8 +216,15 @@ const request = async <TResponse, TBody = unknown>(
   // Cập nhật token phiên đăng nhập nếu yêu cầu liên quan đến đăng nhập/đăng ký.
   // Đảm bảo logic ở trong `if` chỉ chạy ở phía browser (client)
   if (isClient) {
-    if (["/api/auth/login", "/api/auth/register"].some((path) => path === url) && isAuthResponse(payload)) {
+    if ("/api/auth/login" === url && isAuthResponse(payload)) {
       const { accessToken, refreshToken } = payload.data;
+      // localStorage.setItem("accessToken", accessToken);
+      // localStorage.setItem("refreshToken", refreshToken);
+      clientAccessToken.value = accessToken;
+      clientRefreshToken.value = refreshToken;
+    } else if ("/api/auth/refresh-token" === url && isAuthResponse(payload)) {
+      const { accessToken, refreshToken } = payload.data;
+      console.log(refreshToken);
       // localStorage.setItem("accessToken", accessToken);
       // localStorage.setItem("refreshToken", refreshToken);
       clientAccessToken.value = accessToken;
