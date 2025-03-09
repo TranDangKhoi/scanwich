@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
 import { authApi } from "src/api-requests/auth.apis.";
 import { TLogoutBody } from "src/validations/auth.validations";
 
@@ -8,12 +7,12 @@ export async function POST(request: Request) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
-
+  console.log("Run here");
   // Delete cookies either way
   cookieStore.delete("accessToken");
   cookieStore.delete("refreshToken");
   if (!accessToken || !refreshToken) {
-    return NextResponse.json(
+    return Response.json(
       {
         message: "Tôi cảnh cáo bạn nhé, tôi thấy bạn đang không có token đâu, nhưng tôi vẫn đăng xuất cho bạn đấy",
       },
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
   }
   try {
     const { message } = await authApi.logout(body, accessToken);
-    return NextResponse.json(
+    return Response.json(
       {
         message,
       },
@@ -33,7 +32,8 @@ export async function POST(request: Request) {
       },
     );
   } catch {
-    return NextResponse.json(
+    // Remove both access token and refresh token from cookies
+    return Response.json(
       {
         message: "Đăng xuất xảy ra với cảnh báo",
         description: "Nếu bạn còn gặp lại cảnh báo này một lần nữa, xin vui lòng liên hệ với admin",

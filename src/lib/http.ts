@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import parsedEnvData from "src/config";
 import { HTTP_STATUS_CODE } from "src/constants/httpStatusCode.constants";
+import { eventEmitter } from "src/lib/event-emitter";
 import { TLoginRes } from "src/validations/auth.validations";
 
 const isClient = typeof window !== "undefined";
@@ -164,7 +165,7 @@ const request = async <TResponse, TBody = unknown>(
   let stillHavingToken = false;
   if (isClient) {
     // stillHavingToken = !!localStorage.getItem("accessToken");
-    stillHavingToken = !!clientAccessToken.value;
+    stillHavingToken = !!clientAccessToken.value && !!clientRefreshToken.value;
   }
 
   // Xử lý lỗi nếu yêu cầu không thành công.
@@ -181,7 +182,7 @@ const request = async <TResponse, TBody = unknown>(
       if (isClient && stillHavingToken) {
         await fetch("/api/auth/logout", {
           method: "POST",
-          body: null, // Logout sẽ luôn luôn thành công cả kể accessToken có hết hạn đi chăng nữa
+          body: JSON.stringify({}), // Logout sẽ luôn luôn thành công cả kể accessToken có hết hạn đi chăng nữa
           headers: {
             ...baseHeaders,
           },
@@ -191,8 +192,9 @@ const request = async <TResponse, TBody = unknown>(
           // localStorage.removeItem("refreshToken");
           clientAccessToken.value = "";
           clientRefreshToken.value = "";
-          window.location.href = "/login";
+          eventEmitter.emit("unauthorized");
         });
+        throw new UnauthorizedError(data as { status: 401; payload: UnauthorizedErrorPayload });
       } else {
         const accessToken = (options?.headers as any).Authorization.split(" ")[1];
         redirect(`/logout?accessToken=${accessToken}`);

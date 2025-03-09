@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { accountApi } from "src/api-requests/accounts.apis";
@@ -9,10 +10,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/c
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
+import { UnauthorizedError } from "src/lib/http";
 import { handleErrorApi } from "src/lib/utils";
+import { AuthContext } from "src/providers/auth-provider";
 import { changePasswordBodySchema, TChangePasswordBody } from "src/validations/account.validations";
 
 export default function ChangePasswordForm() {
+  const { logout } = useContext(AuthContext);
   const changePasswordForm = useForm<TChangePasswordBody>({
     resolver: zodResolver(changePasswordBodySchema),
     defaultValues: {
@@ -27,19 +31,17 @@ export default function ChangePasswordForm() {
     mutationFn: (body: TChangePasswordBody) => accountApi.changeMyPassword(body),
   });
 
-  const handleChangePassword = changePasswordForm.handleSubmit((data) => {
-    changePasswordMutation.mutate(data, {
-      onSuccess: () => {
-        toast.success("Đổi mật khẩu thành công!");
-      },
-      onError: (error) => {
-        handleErrorApi({
-          error,
-          setError: changePasswordForm.setError,
-          defaultMessage: "Đổi mật khẩu thất bại thảm hại!",
-        });
-      },
-    });
+  const handleChangePassword = changePasswordForm.handleSubmit(async (data) => {
+    try {
+      await changePasswordMutation.mutateAsync(data);
+      toast.success("Đổi mật khẩu thành công!");
+    } catch (error) {
+      handleErrorApi({
+        error,
+        setError: changePasswordForm.setError,
+        defaultMessage: "Đổi mật khẩu thất bại thảm hại!",
+      });
+    }
   });
 
   const handleReset = () => {
