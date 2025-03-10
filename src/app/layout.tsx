@@ -41,7 +41,7 @@ export default function RootLayout({
             >
               {children}
               <Toaster
-                gap={12}
+                gap={14}
                 icons={{ success: <CircleCheck /> }}
                 richColors
                 closeButton

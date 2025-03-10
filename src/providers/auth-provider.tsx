@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { createContext, ReactNode, useContext, useEffect } from "react";
+import { createContext, ReactNode, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { eventEmitter } from "src/lib/event-emitter";
 import { clientAccessToken, clientRefreshToken } from "src/lib/http";
@@ -29,22 +29,25 @@ const AuthProvider = ({
   initialRefreshToken: string;
 }) => {
   const router = useRouter();
-  if (typeof window !== "undefined") {
-    clientRefreshToken.value = initialRefreshToken;
-    clientAccessToken.value = initialAccessToken;
-  }
 
-  const logout = async () => {
+  const logout = useCallback(async () => {
     clientAccessToken.value = "";
     clientRefreshToken.value = "";
-    toast.error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
     router.push("/login");
-  };
+    setTimeout(() => {
+      toast.error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
+    }, 100);
+  }, [router]);
 
   useEffect(() => {
     const unsubscribe = eventEmitter.on("unauthorized", logout);
     return () => unsubscribe();
-  }, []);
+  }, [logout]);
+
+  if (typeof window !== "undefined") {
+    clientRefreshToken.value = initialRefreshToken;
+    clientAccessToken.value = initialAccessToken;
+  }
 
   return (
     <AuthContext.Provider

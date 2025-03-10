@@ -8,7 +8,7 @@ const guestOnlyPaths = ["/login"];
 const publicPaths = ["/"];
 
 // Paths that require authentication
-const authRequiredPaths = ["/dashboard"];
+const authRequiredPaths = ["/dashboard/:path*"];
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
