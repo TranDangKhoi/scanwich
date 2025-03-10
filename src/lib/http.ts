@@ -110,6 +110,20 @@ class RefreshToken {
 
 export const clientRefreshToken = new RefreshToken();
 
+const refreshToken = async () => {
+  const res = await fetch("/api/auth/refresh", {
+    method: "POST",
+    credentials: "include", // Gửi cookie refresh token
+  });
+
+  if (!res.ok) {
+    throw new UnauthorizedError({ payload: { message: "Unauthorized", errors: [] }, status: 401 });
+  }
+
+  const data = await res.json();
+  clientAccessToken.value = data.accessToken; // Lưu access token mới vào state hoặc localStorage
+};
+
 // Hàm `request` là hàm chính để thực hiện các yêu cầu HTTP.
 // Nó hỗ trợ các phương thức GET, POST, PUT, DELETE và xử lý các lỗi HTTP.
 const request = async <TResponse, TBody = unknown>(
