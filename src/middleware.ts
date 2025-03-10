@@ -34,9 +34,9 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // For any other routes, allow if authenticated, redirect to home if not
+  // For any other routes, allow if authenticated, redirect to login if not
   if (!accessToken && !guestOnlyPaths.some((path) => pathname === path)) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return NextResponse.next();
