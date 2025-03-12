@@ -1,3 +1,9 @@
+import PublicLayout from "src/components/layouts/PublicLayout";
+
 export default function Home() {
-  return <div></div>;
+  return (
+    <PublicLayout>
+      <div></div>
+    </PublicLayout>
+  );
 }

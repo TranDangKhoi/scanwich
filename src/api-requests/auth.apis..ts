@@ -19,14 +19,14 @@ export const authApi = {
         Authorization: `Bearer ${accessToken}`,
       },
     }),
-  logoutServerSide: (body: TLogoutBody) =>
-    http.post<any, TLogoutBody>("/api/auth/logout", body, {
+  logoutServerSide: () =>
+    http.post<any, any>("/api/auth/logout", JSON.stringify({}), {
       baseUrl: "",
     }),
   refreshToken: (body: TRefreshTokenBody) =>
     http.post<TRefreshTokenRes, TRefreshTokenBody>("/auth/refresh-token", body),
-  refreshTokenServerSide: (body: TRefreshTokenBody) =>
-    http.post<TRefreshTokenRes, TRefreshTokenBody>("/api/auth/refresh-token", body, {
+  refreshTokenServerSide: () =>
+    http.post<TRefreshTokenRes, any>("/api/auth/refresh-token", JSON.stringify({}), {
       baseUrl: "",
     }),
 };

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import parsedEnvData from "src/config";
+import { EVENTS } from "src/constants/events.constants";
 import { HTTP_STATUS_CODE } from "src/constants/httpStatusCode.constants";
 import { eventEmitter } from "src/lib/event-emitter";
 import { TLoginRes } from "src/validations/auth.validations";
@@ -108,22 +109,6 @@ class RefreshToken {
   }
 }
 
-export const clientRefreshToken = new RefreshToken();
-
-const refreshToken = async () => {
-  const res = await fetch("/api/auth/refresh", {
-    method: "POST",
-    credentials: "include", // Gửi cookie refresh token
-  });
-
-  if (!res.ok) {
-    throw new UnauthorizedError({ payload: { message: "Unauthorized", errors: [] }, status: 401 });
-  }
-
-  const data = await res.json();
-  clientAccessToken.value = data.accessToken; // Lưu access token mới vào state hoặc localStorage
-};
-
 // Hàm `request` là hàm chính để thực hiện các yêu cầu HTTP.
 // Nó hỗ trợ các phương thức GET, POST, PUT, DELETE và xử lý các lỗi HTTP.
 const request = async <TResponse, TBody = unknown>(
@@ -179,7 +164,7 @@ const request = async <TResponse, TBody = unknown>(
   let stillHavingToken = false;
   if (isClient) {
     // stillHavingToken = !!localStorage.getItem("accessToken");
-    stillHavingToken = !!clientAccessToken.value && !!clientRefreshToken.value;
+    stillHavingToken = !!clientAccessToken.value;
   }
 
   // Xử lý lỗi nếu yêu cầu không thành công.
@@ -205,8 +190,7 @@ const request = async <TResponse, TBody = unknown>(
           // localStorage.removeItem("accessToken");
           // localStorage.removeItem("refreshToken");
           clientAccessToken.value = "";
-          clientRefreshToken.value = "";
-          eventEmitter.emit("unauthorized");
+          eventEmitter.emit(EVENTS.UNAUTHORIZED_EVENT);
         });
         throw new UnauthorizedError(data as { status: 401; payload: UnauthorizedErrorPayload });
       } else {
@@ -223,18 +207,16 @@ const request = async <TResponse, TBody = unknown>(
   // Đảm bảo logic ở trong `if` chỉ chạy ở phía browser (client)
   if (isClient) {
     if (["/api/auth/login", "/api/auth/register"].some((path) => path === url) && isAuthResponse(payload)) {
-      const { accessToken, refreshToken } = payload.data;
+      const { accessToken } = payload.data;
       // localStorage.setItem("accessToken", accessToken);
       // localStorage.setItem("refreshToken", refreshToken);
       clientAccessToken.value = accessToken;
-      clientRefreshToken.value = refreshToken;
     } else if ("/auth/logout".includes(url)) {
       // Xóa token nếu yêu cầu là đăng xuất.
       // localStorage.removeItem("accessToken");
       // localStorage.removeItem("refreshToken");
 
       clientAccessToken.value = "";
-      clientRefreshToken.value = "";
     }
   }
 
