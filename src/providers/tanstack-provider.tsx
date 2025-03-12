@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState } from "react";
+import TokenRefreshProvider from "src/providers/token-refresh-provider";
 
 export default function TanstackProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -19,6 +20,7 @@ export default function TanstackProvider({ children }: { children: React.ReactNo
   return (
     <QueryClientProvider client={queryClient}>
       {children}
+      <TokenRefreshProvider />
       <ReactQueryDevtools />
     </QueryClientProvider>
   );

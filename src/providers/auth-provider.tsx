@@ -3,8 +3,9 @@
 import { useRouter } from "next/navigation";
 import { createContext, ReactNode, useCallback, useEffect } from "react";
 import { toast } from "sonner";
+import { EVENTS } from "src/constants/events.constants";
 import { eventEmitter } from "src/lib/event-emitter";
-import { clientAccessToken, clientRefreshToken } from "src/lib/http";
+import { clientAccessToken } from "src/lib/http";
 import { TAccount } from "src/validations/account.validations";
 
 type TAuthContext = {
@@ -22,7 +23,6 @@ export const AuthContext = createContext<TAuthContext>({
 const AuthProvider = ({
   children,
   initialAccessToken = "",
-  initialRefreshToken = "",
 }: {
   children: ReactNode;
   initialAccessToken: string;
@@ -32,7 +32,6 @@ const AuthProvider = ({
 
   const logout = useCallback(async () => {
     clientAccessToken.value = "";
-    clientRefreshToken.value = "";
     router.push("/login");
     setTimeout(() => {
       toast.error("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
@@ -40,12 +39,11 @@ const AuthProvider = ({
   }, [router]);
 
   useEffect(() => {
-    const unsubscribe = eventEmitter.on("unauthorized", logout);
+    const unsubscribe = eventEmitter.on(EVENTS.UNAUTHORIZED_EVENT, logout);
     return () => unsubscribe();
   }, [logout]);
 
   if (typeof window !== "undefined") {
-    clientRefreshToken.value = initialRefreshToken;
     clientAccessToken.value = initialAccessToken;
   }
 

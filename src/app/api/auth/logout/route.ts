@@ -1,9 +1,7 @@
 import { cookies } from "next/headers";
 import { authApi } from "src/api-requests/auth.apis.";
-import { TLogoutBody } from "src/validations/auth.validations";
 
-export async function POST(request: Request) {
-  const body: TLogoutBody = await request.json();
+export async function POST() {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
@@ -22,7 +20,7 @@ export async function POST(request: Request) {
     );
   }
   try {
-    const { message } = await authApi.logout(body, accessToken);
+    const { message } = await authApi.logout({ refreshToken }, accessToken);
     return Response.json(
       {
         message,

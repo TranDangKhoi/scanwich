@@ -17,9 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "src/components/ui/dropdown-menu";
 import { PATH } from "src/constants/path.constants";
-import { clientRefreshToken } from "src/lib/http";
 import { handleErrorApi } from "src/lib/utils";
-import { TLogoutBody } from "src/validations/auth.validations";
 
 export default function DropdownAvatar() {
   const router = useRouter();
@@ -31,22 +29,17 @@ export default function DropdownAvatar() {
 
   const logoutMutation = useMutation({
     mutationKey: ["logout"],
-    mutationFn: (body: TLogoutBody) => authApi.logoutServerSide(body),
+    mutationFn: () => authApi.logoutServerSide(),
   });
 
   const handleLogout = () => {
     try {
-      logoutMutation.mutate(
-        {
-          refreshToken: clientRefreshToken.value,
+      logoutMutation.mutate(undefined, {
+        onSuccess: () => {
+          toast.success("Đăng xuất thành công");
+          router.push(PATH.LOGIN);
         },
-        {
-          onSuccess: () => {
-            toast.success("Đăng xuất thành công");
-            router.push(PATH.LOGIN);
-          },
-        },
-      );
+      });
     } catch (error) {
       handleErrorApi({
         error,
