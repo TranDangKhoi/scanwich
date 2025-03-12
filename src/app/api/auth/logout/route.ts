@@ -5,7 +5,6 @@ export async function POST() {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
-  console.log("Run here");
   // Delete cookies either way
   cookieStore.delete("accessToken");
   cookieStore.delete("refreshToken");

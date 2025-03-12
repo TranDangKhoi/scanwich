@@ -39,6 +39,7 @@ export default function TokenRefreshProvider() {
       if (isAccessTokenAlmostExpired) {
         if (refreshingTokenRef.current) return;
         refreshingTokenRef.current = true;
+
         try {
           const result = await authApi.refreshTokenServerSide();
           const { accessToken: newAccessToken } = result.payload.data;
@@ -52,7 +53,7 @@ export default function TokenRefreshProvider() {
       }
     };
     validateAndRefreshToken();
-    refreshTokenIntervalRef.current = setInterval(validateAndRefreshToken, 1000);
+    refreshTokenIntervalRef.current = setInterval(validateAndRefreshToken, 3000);
     return () => {
       if (refreshTokenIntervalRef.current) {
         clearInterval(refreshTokenIntervalRef.current);
