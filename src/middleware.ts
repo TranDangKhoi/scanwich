@@ -8,12 +8,12 @@ const guestOnlyPaths = ["/login"];
 const publicPaths = ["/"];
 
 // Paths that require authentication
-const authRequiredPaths = ["/dashboard/:path*"];
+const authRequiredPaths = ["/dashboard"];
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
-
+  const refreshToken = request.cookies.get("refreshToken")?.value;
   // Skip middleware for static files and API routes
   if (pathname.startsWith("/_next") || pathname.startsWith("/static") || pathname.startsWith("/api")) {
     return NextResponse.next();
@@ -25,17 +25,26 @@ export const middleware = async (request: NextRequest) => {
   }
 
   // Redirect authenticated users away from guest-only paths
-  if (guestOnlyPaths.some((path) => pathname === path) && accessToken) {
+  if (guestOnlyPaths.some((path) => pathname.startsWith(path)) && accessToken) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  // Redirect users that have left the website a long time ago, but the refresh token inside cookie is still valid
+  if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken && refreshToken) {
+    const url = new URL("/refresh-token", request.url);
+
+    url.searchParams.set("refreshToken", refreshToken);
+    url.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(url);
+  }
+
   // Redirect unauthenticated users to login for protected paths
-  if (authRequiredPaths.some((path) => pathname === path) && !accessToken) {
+  if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // For any other routes, allow if authenticated, redirect to login if not
-  if (!accessToken && !guestOnlyPaths.some((path) => pathname === path)) {
+  if (!accessToken && !guestOnlyPaths.some((path) => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

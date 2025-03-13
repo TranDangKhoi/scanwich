@@ -5,6 +5,8 @@ import { useEffect, useRef } from "react";
 import { authApi } from "src/api-requests/auth.apis.";
 import { clientAccessToken } from "src/lib/http";
 import { handleErrorApi } from "src/lib/utils";
+
+// Routes that don't require /refresh-token API
 const NON_REFRESH_TOKEN_ROUTES = ["/login", "/refresh-token", "/"];
 
 export default function TokenRefreshProvider() {
@@ -12,8 +14,8 @@ export default function TokenRefreshProvider() {
   const refreshTokenIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const refreshingTokenRef = useRef<boolean | null>(null);
   useEffect(() => {
+    // If the current path is in the non-refresh-token routes list, stop further execution
     if (NON_REFRESH_TOKEN_ROUTES.includes(pathname)) return;
-    // let interval: NodeJS.Timeout | null = null;
 
     const validateAndRefreshToken = async () => {
       const accessToken = clientAccessToken.value;
@@ -26,8 +28,8 @@ export default function TokenRefreshProvider() {
 
       const accessTokenIssuedAt = decodedAccessToken.iat;
 
-      // Nếu access token của chúng ta có thời gian hết hạn là 10s
-      // thì mình sẽ kiểm tra xem nếu còn 1/3 thời gian (3.333s) thì mình sẽ cho refresh token lại
+      // For instance, if our accesstoken expires after 10 secs
+      // we will check if one-third of the time (3.333s) remains, and if so, we will refresh the token.
 
       // Thời gian còn lại sẽ tính dựa trên công thức: decodedAccessToken.exp - now
       const secondsLeftBeforeAccessTokenExpire = accessTokenExpireDate - now;
@@ -37,6 +39,8 @@ export default function TokenRefreshProvider() {
 
       const isAccessTokenAlmostExpired = secondsLeftBeforeAccessTokenExpire <= totalAccessTokenLifetime / 3;
       if (isAccessTokenAlmostExpired) {
+        // These 2 lines are to prevent multiple refresh token requests
+        // If the refresh token request is already in progress, we will return immediately
         if (refreshingTokenRef.current) return;
         refreshingTokenRef.current = true;
 
@@ -52,6 +56,7 @@ export default function TokenRefreshProvider() {
         }
       }
     };
+
     validateAndRefreshToken();
     refreshTokenIntervalRef.current = setInterval(validateAndRefreshToken, 3000);
     return () => {
