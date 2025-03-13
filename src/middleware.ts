@@ -1,13 +1,16 @@
+import { jwtDecode } from "jwt-decode";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { authApi } from "src/api-requests/auth.apis.";
+import { calculateCookieExpires } from "src/lib/utils";
 
 // Paths that once logged-in you can not go back to
-const guestOnlyPaths = ["/login"];
+const guestOnlyPaths = ["/login", "/refresh-token"];
 
 // Paths that you can navigate to at anytime
 const publicPaths = ["/"];
 
-// Paths that require authentication
+// Paths that require authentication (also its sub-paths like /dashboard/settings, /dashboard/manage, ...e.t.c)
 const authRequiredPaths = ["/dashboard"];
 
 export const middleware = async (request: NextRequest) => {
@@ -29,13 +32,39 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
+  // I WILL GET BACK TO THIS METHOD IF THE NEW ONE BELOW HAS BUGS
   // Redirect users that have left the website a long time ago, but the refresh token inside cookie is still valid
-  if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken && refreshToken) {
-    const url = new URL("/refresh-token", request.url);
+  // if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken && refreshToken) {
+  //   const url = new URL("/refresh-token", request.url);
+  //   url.searchParams.set("redirect", pathname);
+  //   return NextResponse.redirect(url);
+  // }
 
-    url.searchParams.set("refreshToken", refreshToken);
-    url.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(url);
+  if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken && refreshToken) {
+    const result = await authApi.refreshToken({ refreshToken });
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.payload.data;
+    const decodedAccessToken = jwtDecode(newAccessToken);
+    const decodedRefreshToken = jwtDecode(newRefreshToken);
+    if (newAccessToken) {
+      const response = NextResponse.next();
+      response.cookies.set("accessToken", newAccessToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true,
+        path: "/",
+        expires: calculateCookieExpires(decodedAccessToken.exp as number),
+      });
+      response.cookies.set("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true,
+        path: "/",
+        expires: calculateCookieExpires(decodedRefreshToken.exp as number),
+      });
+      return response;
+    } else {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
 
   // Redirect unauthenticated users to login for protected paths
