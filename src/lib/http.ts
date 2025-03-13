@@ -197,6 +197,22 @@ const request = async <TResponse, TBody = unknown>(
         const accessToken = (options?.headers as any).Authorization.split(" ")[1];
         redirect(`/logout?accessToken=${accessToken}`);
       }
+    } else if (res.url.includes("/api/auth/refresh-token") && res.status === HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR) {
+      console.log("sd");
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        body: JSON.stringify({}), // Logout sẽ luôn luôn thành công cả kể accessToken có hết hạn đi chăng nữa
+        headers: {
+          ...baseHeaders,
+        },
+      }).finally(() => {
+        // Đăng xuất thành công thì xóa token trong localStorage và chuyển hướng người dùng đến trang đăng nhập.
+        // localStorage.removeItem("accessToken");
+        // localStorage.removeItem("refreshToken");
+        clientAccessToken.value = "";
+        eventEmitter.emit(EVENTS.UNAUTHORIZED_EVENT);
+      });
+      throw new UnauthorizedError(data as { status: 401; payload: UnauthorizedErrorPayload });
     } else {
       // Nếu là lỗi khác, ném ra `HttpError`.
       throw new HttpError(data);
