@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { authApi } from "src/api-requests/auth.apis.";
 import { clientAccessToken } from "src/lib/http";
-import { handleErrorApi } from "src/lib/utils";
 
 // Routes that don't require /refresh-token API
 const NON_REFRESH_TOKEN_ROUTES = ["/login", "/refresh-token", "/"];
@@ -22,13 +21,13 @@ export default function TokenRefreshProvider() {
       if (!accessToken) return;
 
       const decodedAccessToken = jwtDecode<{ exp: number; iat: number }>(accessToken);
-      const now = new Date().getTime() / 1000;
+      const now = new Date().getTime() / 1000 - 1;
 
       const accessTokenExpireDate = decodedAccessToken.exp;
 
       const accessTokenIssuedAt = decodedAccessToken.iat;
 
-      // For instance, if our accesstoken expires after 10 secs
+      // For instance, if our access token expires after 10 secs
       // we will check if one-third of the time (3.333s) remains, and if so, we will refresh the token.
 
       // Thời gian còn lại sẽ tính dựa trên công thức: decodedAccessToken.exp - now
@@ -49,8 +48,8 @@ export default function TokenRefreshProvider() {
           const { accessToken: newAccessToken } = result.payload.data;
           clientAccessToken.value = newAccessToken;
         } catch (error) {
-          handleErrorApi({ error });
           clearInterval(refreshTokenIntervalRef.current!);
+          return error;
         } finally {
           refreshingTokenRef.current = false;
         }

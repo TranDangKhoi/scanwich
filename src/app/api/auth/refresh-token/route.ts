@@ -44,6 +44,7 @@ export async function POST() {
       status: 200,
     });
   } catch (error) {
+    console.log(error);
     if (error instanceof HttpError) {
       return Response.json(error.payload, {
         status: error.status,

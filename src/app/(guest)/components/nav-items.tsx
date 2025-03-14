@@ -1,20 +1,17 @@
-"use client";
-
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { PATH } from "src/constants/path.constants";
-import { clientAccessToken } from "src/lib/http";
 
 const menuItems = [
   {
     title: "Món ăn",
     href: PATH.MENU,
-    public: true,
+    authRequired: true, // Khi chưa đăng nhập thì sẽ không hiển thị
   },
   {
     title: "Đơn hàng",
     href: PATH.ORDERS,
-    public: true,
+    authRequired: true, // Khi chưa đăng nhập thì sẽ không hiển thị
   },
   {
     title: "Đăng nhập",
@@ -29,16 +26,10 @@ const menuItems = [
 ];
 
 export default function NavItems({ className }: { className?: string }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const accessToken = clientAccessToken.value;
-    setIsAuthenticated(!!accessToken);
-  }, []);
-
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get("accessToken")?.value;
   return menuItems
     .filter((item) => {
-      if (item.public) return true;
       if (item.guestOnly) return !isAuthenticated;
       if (item.authRequired) return isAuthenticated;
       return false;

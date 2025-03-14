@@ -79,6 +79,16 @@ export class UnauthorizedError extends HttpError {
   }
 }
 
+export class InternalServerError extends HttpError {
+  status: 500;
+  payload: any;
+  constructor({ status, payload }: { status: 500; payload: any }) {
+    super({ status, payload, message: payload.message || "Lỗi InternalServerError" });
+    this.status = status;
+    this.payload = payload;
+  }
+}
+
 class AccessToken {
   private accessToken = "";
   get value() {
@@ -194,11 +204,9 @@ const request = async <TResponse, TBody = unknown>(
         });
         throw new UnauthorizedError(data as { status: 401; payload: UnauthorizedErrorPayload });
       } else {
-        const accessToken = (options?.headers as any).Authorization.split(" ")[1];
-        redirect(`/logout?accessToken=${accessToken}`);
+        throw new UnauthorizedError(data as { status: 401; payload: UnauthorizedErrorPayload });
       }
     } else if (res.url.includes("/api/auth/refresh-token") && res.status === HTTP_STATUS_CODE.INTERNAL_SERVER_ERROR) {
-      console.log("sd");
       await fetch("/api/auth/logout", {
         method: "POST",
         body: JSON.stringify({}), // Logout sẽ luôn luôn thành công cả kể accessToken có hết hạn đi chăng nữa
@@ -212,7 +220,7 @@ const request = async <TResponse, TBody = unknown>(
         clientAccessToken.value = "";
         eventEmitter.emit(EVENTS.UNAUTHORIZED_EVENT);
       });
-      throw new UnauthorizedError(data as { status: 401; payload: UnauthorizedErrorPayload });
+      throw new InternalServerError(data as { status: 500; payload: any });
     } else {
       // Nếu là lỗi khác, ném ra `HttpError`.
       throw new HttpError(data);
@@ -231,7 +239,6 @@ const request = async <TResponse, TBody = unknown>(
       // Xóa token nếu yêu cầu là đăng xuất.
       // localStorage.removeItem("accessToken");
       // localStorage.removeItem("refreshToken");
-
       clientAccessToken.value = "";
     }
   }
