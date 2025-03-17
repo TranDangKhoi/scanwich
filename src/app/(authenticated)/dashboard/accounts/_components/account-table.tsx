@@ -31,7 +31,7 @@ import {
 } from "src/components/ui/dropdown-menu";
 import { Input } from "src/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "src/components/ui/table";
-import { TAccount, TAccountListRes } from "src/validations/account.validations";
+import { TAccount } from "src/validations/account.validations";
 
 const AccountTableContext = createContext<{
   setEmployeeIdEdit: (value: number) => void;

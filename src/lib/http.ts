@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import parsedEnvData from "src/config";
 import { EVENTS } from "src/constants/events.constants";
 import { HTTP_STATUS_CODE } from "src/constants/httpStatusCode.constants";
@@ -104,20 +103,6 @@ class AccessToken {
 }
 
 export const clientAccessToken = new AccessToken();
-
-class RefreshToken {
-  private refreshToken = "";
-  get value() {
-    return this.refreshToken;
-  }
-  set value(refreshToken: string) {
-    // Nếu gọi method này ở server thì sẽ bị lỗi
-    if (typeof window === "undefined") {
-      throw new Error("Cannot set refreshToken on server side");
-    }
-    this.refreshToken = refreshToken;
-  }
-}
 
 // Hàm `request` là hàm chính để thực hiện các yêu cầu HTTP.
 // Nó hỗ trợ các phương thức GET, POST, PUT, DELETE và xử lý các lỗi HTTP.
