@@ -1,6 +1,6 @@
 # Scanwich
 
-Scanwich is a Next.js-powered dining solution that lets customers order food seamlessly. Just scan, browse, and place your order in seconds!
+Scanwich is a Next.js-powered dining solution that lets customers order food seamlessly. Just QR scan, browse, and place your order in seconds!
 
 ## Overview
 
@@ -11,14 +11,16 @@ Scanwich is a modern restaurant ordering system that streamlines the dining expe
 ### Frontend
 
 - **Next.js 14** - React framework with App Router
+- **QR Code** - For generating QR codes
 - **TypeScript** - For type-safe code
 - **Tailwind CSS** - For styling
-- **Radix UI** - For accessible UI components
+- **Shadcn UI** - For UI components
 - **React Query** - For server state management
 - **React Hook Form** - For form handling
 - **Zod** - For schema validation
-- **next-themes** - For dark/light mode
 - **Lucide React** - For icons
+- **Socket.IO Client** - For real-time features (future features)
+- **Zustand** - For state management (future adjustment)
 
 ### Backend
 
