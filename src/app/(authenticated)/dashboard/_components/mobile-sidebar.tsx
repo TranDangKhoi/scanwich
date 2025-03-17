@@ -3,7 +3,7 @@ import { PanelLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import menuItems from "src/app/(authenticated)/dashboard/menu-items";
+import sidebarItems from "src/app/(authenticated)/dashboard/sidebar-items";
 import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
 import { Button } from "src/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "src/components/ui/sheet";
@@ -42,7 +42,7 @@ export default function MobileSidebar() {
             />
             <span className="sr-only">Scanwich</span>
           </Link>
-          {menuItems.map((Item, index) => {
+          {sidebarItems.map((Item, index) => {
             const isActive = pathname === Item.href;
             return (
               <Link

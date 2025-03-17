@@ -41,7 +41,7 @@ export default function AutoPagination({ currentPage, pageSize, pathname }: Prop
   const renderPagination = () => {
     let showRightEllipsis = false;
     let showLeftEllipsis = false;
-    const renderDotBefore = (index: number) => {
+    const renderLeftEllipsis = (index: number) => {
       if (!showLeftEllipsis) {
         showLeftEllipsis = true;
         return (
@@ -52,7 +52,7 @@ export default function AutoPagination({ currentPage, pageSize, pathname }: Prop
       }
       return null;
     };
-    const renderDotAfter = (index: number) => {
+    const renderRightEllipsis = (index: number) => {
       if (!showRightEllipsis) {
         showRightEllipsis = true;
         return (
@@ -71,15 +71,15 @@ export default function AutoPagination({ currentPage, pageSize, pathname }: Prop
 
         // Điều kiện để return về ...
         if (currentPage <= RANGE * 2 + 1 && pageNumber > currentPage + RANGE && pageNumber < pageSize - RANGE + 1) {
-          return renderDotAfter(index);
+          return renderRightEllipsis(index);
         } else if (currentPage > RANGE * 2 + 1 && currentPage < pageSize - RANGE * 2) {
           if (pageNumber < currentPage - RANGE && pageNumber > RANGE) {
-            return renderDotBefore(index);
+            return renderLeftEllipsis(index);
           } else if (pageNumber > currentPage + RANGE && pageNumber < pageSize - RANGE + 1) {
-            return renderDotAfter(index);
+            return renderRightEllipsis(index);
           }
         } else if (currentPage >= pageSize - RANGE * 2 && pageNumber > RANGE && pageNumber < currentPage - RANGE) {
-          return renderDotBefore(index);
+          return renderLeftEllipsis(index);
         }
         return (
           <PaginationItem key={index}>
@@ -117,7 +117,9 @@ export default function AutoPagination({ currentPage, pageSize, pathname }: Prop
                 e.preventDefault();
               }
             }}
-          />
+          >
+            Trang trước
+          </PaginationPrevious>
         </PaginationItem>
         {renderPagination()}
 
@@ -137,7 +139,9 @@ export default function AutoPagination({ currentPage, pageSize, pathname }: Prop
                 e.preventDefault();
               }
             }}
-          />
+          >
+            Trang sau
+          </PaginationNext>
         </PaginationItem>
       </PaginationContent>
     </Pagination>

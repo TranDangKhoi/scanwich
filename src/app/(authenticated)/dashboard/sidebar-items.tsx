@@ -1,7 +1,7 @@
 import { Home, LineChart, Salad, ShoppingCart, Table, Users2 } from "lucide-react";
 import { PATH } from "src/constants/path.constants";
 
-const menuItems = [
+const sidebarItems = [
   {
     title: "Dashboard",
     Icon: Home,
@@ -10,29 +10,29 @@ const menuItems = [
   {
     title: "Đơn hàng",
     Icon: ShoppingCart,
-    href: "/manage/orders",
+    href: PATH.DASHBOARD_ORDERS,
   },
   {
     title: "Bàn ăn",
     Icon: Table,
-    href: "/manage/tables",
+    href: PATH.DASHBOARD_TABLES,
   },
   {
     title: "Món ăn",
     Icon: Salad,
-    href: "/manage/dishes",
+    href: PATH.DASHBOARD_DISHES,
   },
 
   {
     title: "Phân tích",
     Icon: LineChart,
-    href: "/manage/analytics",
+    href: PATH.DASHBOARD_ANALYTICS,
   },
   {
     title: "Nhân viên",
     Icon: Users2,
-    href: "/manage/accounts",
+    href: PATH.DASHBOARD_ACCOUNTS,
   },
 ];
 
-export default menuItems;
+export default sidebarItems;

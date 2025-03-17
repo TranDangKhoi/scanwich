@@ -10,7 +10,7 @@ const menuItems = [
   },
   {
     title: "Đơn hàng",
-    href: PATH.ORDERS,
+    href: PATH.DASHBOARD_ORDERS,
     authRequired: true, // Khi chưa đăng nhập thì sẽ không hiển thị
   },
   {

@@ -3,7 +3,7 @@ import { Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import menuItems from "src/app/(authenticated)/dashboard/menu-items";
+import sidebarItems from "src/app/(authenticated)/dashboard/sidebar-items";
 import ScanwichLogo from "src/assets/logos/scanwich-logo.png";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "src/components/ui/tooltip";
 import { PATH } from "src/constants/path.constants";
@@ -27,7 +27,7 @@ export default function AppSidebar() {
             <span className="sr-only">Scanwich</span>
           </Link>
 
-          {menuItems.map((item, index) => {
+          {sidebarItems.map((item, index) => {
             const isActive = pathname === item.href;
             return (
               <Tooltip
