@@ -32,14 +32,18 @@ Scanwich is a modern restaurant ordering system that streamlines the dining expe
 
 ## Key Features
 
-- 🔐 Authentication & Authorization
-- 🌙 Dark/Light mode
-- 📱 Responsive design
-- 🔄 Real-time order updates
-- 👥 User role management
-- 🍽️ Menu management
-- 📊 Order tracking
-- 🔍 Order history
+- 🔐 JWT-based Authentication & Role-based Authorization
+- 🌙 Theme switching with next-themes
+- 📱 Fully responsive design with Tailwind CSS
+- 🎨 Modern UI components with Shadcn UI
+- 🔄 Real-time order updates via Socket.IO
+- 📝 Type-safe forms with React Hook Form & Zod
+- 🚀 Server state management with React Query
+- 📊 Order tracking and management system
+- 🔍 Comprehensive order history
+- 📱 QR code scanning for table identification
+- 💾 Persistent data storage with Prisma & SQLite
+- 🔄 Future state management with Zustand
 
 ## Getting Started
 
