@@ -30,19 +30,6 @@ Scanwich is a modern restaurant ordering system that streamlines the dining expe
 - **SQLite** - Database
 - **Socket.IO** - For real-time features
 
-### Project Structure
-
-scanwich/
-├── src/ # Frontend source code
-│ ├── app/ # Next.js app router pages
-│ ├── components/ # Reusable UI components
-│ ├── hooks/ # Custom React hooks
-│ └── lib/ # Utility functions
-├── server/ # Backend source code
-│ ├── src/ # Server source files
-│ └── prisma/ # Database schema and migrations
-└── public/ # Static assets
-
 ## Key Features
 
 - 🔐 Authentication & Authorization
