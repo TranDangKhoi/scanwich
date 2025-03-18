@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { authApi } from "src/api-requests/auth.apis.";
+import { authApi } from "src/api-requests/auth.apis";
 import { clientAccessToken } from "src/lib/http";
 import { handleErrorApi } from "src/lib/utils";
 

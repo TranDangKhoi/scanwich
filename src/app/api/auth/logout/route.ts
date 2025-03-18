@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { authApi } from "src/api-requests/auth.apis.";
+import { authApi } from "src/api-requests/auth.apis";
 
 export async function POST() {
   const cookieStore = cookies();

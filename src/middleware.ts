@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { authApi } from "src/api-requests/auth.apis.";
+import { authApi } from "src/api-requests/auth.apis";
 import { calculateCookieExpires } from "src/lib/utils";
 
 // Paths that once logged-in you can not go back to

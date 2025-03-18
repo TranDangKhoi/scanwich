@@ -2,7 +2,7 @@
 import { jwtDecode } from "jwt-decode";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { authApi } from "src/api-requests/auth.apis.";
+import { authApi } from "src/api-requests/auth.apis";
 import { clientAccessToken } from "src/lib/http";
 
 // Routes that don't require /refresh-token API
