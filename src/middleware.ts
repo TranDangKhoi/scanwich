@@ -13,10 +13,38 @@ const publicPaths = ["/"];
 // Paths that require authentication (also its sub-paths like /dashboard/settings, /dashboard/manage, ...e.t.c)
 const authRequiredPaths = ["/dashboard"];
 
+const roleBasedPaths = {
+  OWNER: ["/dashboard/accounts"],
+  EMPLOYEE: ["/dashboard/profile", "/dashboard/orders"], // example employee routes
+};
+
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
+
+  // This if code block is to check if the user is trying to access a restricted path without an appropriate role
+  // We have 2 different roles: Employee and Owner, Employee can not access restricted routes
+  if (accessToken) {
+    try {
+      const decodedAccessToken = jwtDecode<{ role: string }>(accessToken);
+      const userRole = decodedAccessToken.role;
+
+      const isRestrictedPath = Object.entries(roleBasedPaths).some(([role, paths]) => {
+        return paths.some((path) => pathname.startsWith(path)) && role !== userRole;
+      });
+
+      if (isRestrictedPath) {
+        return NextResponse.redirect(new URL("/dashboard/manage", request.url));
+      }
+    } catch {
+      const response = NextResponse.redirect(new URL("/login", request.url));
+      response.cookies.delete("accessToken");
+      response.cookies.delete("refreshToken");
+      return response;
+    }
+  }
+
   // Skip middleware for static files and API routes
   if (pathname.startsWith("/_next") || pathname.startsWith("/static") || pathname.startsWith("/api")) {
     return NextResponse.next();
@@ -28,7 +56,6 @@ export const middleware = async (request: NextRequest) => {
     !accessToken &&
     refreshToken
   ) {
-    console.log("Run here maybe?");
     const result = await authApi.refreshToken({ refreshToken });
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.payload.data;
     const decodedAccessToken = jwtDecode(newAccessToken);

@@ -17,6 +17,8 @@ import { useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Button } from "src/components/ui/button";
 // import EditEmployee from "src/app/manage/accounts/edit-employee";
+import { useQuery } from "@tanstack/react-query";
+import { accountApi } from "src/api-requests/accounts.apis";
 import AddAccountDialog from "src/app/(authenticated)/dashboard/accounts/_components/add-account-dialog";
 import RemoveAccountAlert from "src/app/(authenticated)/dashboard/accounts/_components/remove-account-alert";
 import AutoPagination from "src/components/manual/auto-pagination";
@@ -49,7 +51,6 @@ export const columns: ColumnDef<TAccount>[] = [
   {
     accessorKey: "id",
     id: "id",
-    enableHiding: true,
     header: "ID",
   },
   {
@@ -90,7 +91,6 @@ export const columns: ColumnDef<TAccount>[] = [
   },
   {
     id: "actions",
-    enableHiding: false,
     cell: function Actions({ row }) {
       const { setEmployeeIdEdit, setEmployeeDelete } = useContext(AccountTableContext);
       const openEditEmployee = () => {
@@ -125,8 +125,8 @@ export const columns: ColumnDef<TAccount>[] = [
 
 const PAGE_SIZE = 10;
 export default function AccountTable() {
-  const searchParam = useSearchParams();
-  const page = searchParam.get("page") ? Number(searchParam.get("page")) : 1;
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const pageIndex = page - 1;
   // const params = Object.fromEntries(searchParam.entries())
   const [employeeIdEdit, setEmployeeIdEdit] = useState<number | undefined>();
@@ -139,6 +139,11 @@ export default function AccountTable() {
   const [pagination, setPagination] = useState({
     pageIndex, // Gía trị mặc định ban đầu, không có ý nghĩa khi data được fetch bất đồng bộ
     pageSize: PAGE_SIZE, //default page size
+  });
+
+  const { data: accountListData } = useQuery({
+    queryKey: ["accounts"],
+    queryFn: accountApi.getAllAccounts,
   });
 
   const table = useReactTable({

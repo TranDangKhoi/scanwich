@@ -173,7 +173,7 @@ const request = async <TResponse, TBody = unknown>(
         },
       );
     } else if (res.status === HTTP_STATUS_CODE.UNAUTHORIZED) {
-      if (isClient && stillHavingToken) {
+      if (isClient && stillHavingToken && res.url.includes("/api/auth/refresh-token")) {
         await fetch("/api/auth/logout", {
           method: "POST",
           body: JSON.stringify({}), // Logout sẽ luôn luôn thành công cả kể accessToken có hết hạn đi chăng nữa
