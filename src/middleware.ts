@@ -22,25 +22,13 @@ export const middleware = async (request: NextRequest) => {
     return NextResponse.next();
   }
 
-  // Allow public paths without any restrictions
-  if (publicPaths.some((path) => pathname === path)) {
-    return NextResponse.next();
-  }
-
-  // Redirect authenticated users away from guest-only paths
-  if (guestOnlyPaths.some((path) => pathname.startsWith(path)) && accessToken) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
-  // I WILL GET BACK TO THIS METHOD IF THE NEW ONE BELOW HAS BUGS
-  // Redirect users that have left the website a long time ago, but the refresh token inside cookie is still valid
-  // if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken && refreshToken) {
-  //   const url = new URL("/refresh-token", request.url);
-  //   url.searchParams.set("redirect", pathname);
-  //   return NextResponse.redirect(url);
-  // }
-
-  if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken && refreshToken) {
+  if (
+    (publicPaths.some((path) => pathname.startsWith(path)) ||
+      authRequiredPaths.some((path) => pathname.startsWith(path))) &&
+    !accessToken &&
+    refreshToken
+  ) {
+    console.log("Run here maybe?");
     const result = await authApi.refreshToken({ refreshToken });
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.payload.data;
     const decodedAccessToken = jwtDecode(newAccessToken);
@@ -66,6 +54,24 @@ export const middleware = async (request: NextRequest) => {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
+
+  // Allow public paths without any restrictions
+  if (publicPaths.some((path) => pathname === path)) {
+    return NextResponse.next();
+  }
+
+  // Redirect authenticated users away from guest-only paths
+  if (guestOnlyPaths.some((path) => pathname.startsWith(path)) && accessToken) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // I WILL GET BACK TO THIS METHOD IF THE NEW ONE BELOW HAS BUGS
+  // Redirect users that have left the website a long time ago, but the refresh token inside cookie is still valid
+  // if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken && refreshToken) {
+  //   const url = new URL("/refresh-token", request.url);
+  //   url.searchParams.set("redirect", pathname);
+  //   return NextResponse.redirect(url);
+  // }
 
   // Redirect unauthenticated users to login for protected paths
   if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken) {
