@@ -48,3 +48,13 @@ Scanwich is a modern restaurant ordering system that streamlines the dining expe
 ## Getting Started
 
 Umm, I'll get to that. Probably there'll never be a start because you have no access to API keys.
+
+## Stuffs that can be improved
+
+- Improve Avatar selection
+- Use Tanstack Virtual to virtualize the account table (and other tables)
+- Better authentication logic -> Maybe switch to the old logic that I've been familiar with: Call refresh token API only when receive a 401 error and it's token expired error, and for the tokens inside cookie, we keep the current logic
+- More settings for setting page
+- Use react-use for the useKeyboard hook -> require owner to use a combined keys to delete an account
+
+  > And more...
