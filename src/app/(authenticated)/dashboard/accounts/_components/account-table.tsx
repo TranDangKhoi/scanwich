@@ -16,8 +16,8 @@ import {
 import { useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { Button } from "src/components/ui/button";
-// import AddEmployee from "src/app/manage/accounts/add-employee";
 // import EditEmployee from "src/app/manage/accounts/edit-employee";
+import AddAccountDialog from "src/app/(authenticated)/dashboard/accounts/_components/add-account-dialog";
 import RemoveAccountAlert from "src/app/(authenticated)/dashboard/accounts/_components/remove-account-alert";
 import AutoPagination from "src/components/manual/auto-pagination";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
@@ -48,10 +48,13 @@ const AccountTableContext = createContext<{
 export const columns: ColumnDef<TAccount>[] = [
   {
     accessorKey: "id",
+    id: "id",
+    enableHiding: true,
     header: "ID",
   },
   {
     accessorKey: "avatar",
+    id: "avatar",
     header: "Ảnh đại diện",
     cell: ({ row }) => (
       <div>
@@ -64,11 +67,14 @@ export const columns: ColumnDef<TAccount>[] = [
   },
   {
     accessorKey: "name",
+    id: "name",
     header: "Họ và tên",
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "email",
+    id: "email",
+
     header: ({ column }) => {
       return (
         <Button
@@ -183,7 +189,9 @@ export default function AccountTable() {
             onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
             className="max-w-sm"
           />
-          <div className="ml-auto flex items-center gap-2">{/* <AddEmployee /> */}</div>
+          <div className="ml-auto flex items-center gap-2">
+            <AddAccountDialog />
+          </div>
         </div>
         <div className="rounded-md border">
           <Table>
