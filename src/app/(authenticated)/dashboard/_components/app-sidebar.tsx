@@ -22,7 +22,7 @@ export default function AppSidebar() {
             <Image
               src={ScanwichLogo}
               alt="Scanwich Logo"
-              className="transition-all group-hover:scale-110 w-auto h-auto"
+              className="h-auto w-auto transition-all group-hover:scale-110"
             />
             <span className="sr-only">Scanwich</span>
           </Link>
@@ -60,7 +60,7 @@ export default function AppSidebar() {
               <Link
                 href={PATH.DASHBOARD_SETTINGS}
                 className={cn(
-                  "flex h-9 w-9 items-center justify-center rounded-lg  transition-colors hover:text-foreground md:h-8 md:w-8",
+                  "flex h-9 w-9 items-center justify-center rounded-lg transition-colors hover:text-foreground md:h-8 md:w-8",
                   {
                     "bg-accent text-accent-foreground": pathname === PATH.DASHBOARD_SETTINGS,
                     "text-muted-foreground": pathname !== PATH.DASHBOARD_SETTINGS,

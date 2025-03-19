@@ -31,7 +31,7 @@ export default function RemoveAccountAlert({
           <AlertDialogTitle>Xóa nhân viên?</AlertDialogTitle>
           <AlertDialogDescription>
             Tài khoản{" "}
-            <span className="font-semibold text-primary rounded-md">{employeeDelete?.name || "Unknown account"}</span>{" "}
+            <span className="rounded-md font-semibold text-primary">{employeeDelete?.name || "Unknown account"}</span>{" "}
             sẽ bị xóa vĩnh viễn
           </AlertDialogDescription>
         </AlertDialogHeader>

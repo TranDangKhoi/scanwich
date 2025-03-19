@@ -10,39 +10,52 @@ const guestOnlyPaths = ["/login", "/refresh-token"];
 // Paths that you can navigate to at anytime
 const publicPaths = ["/"];
 
-// Paths that require authentication (also its sub-paths like /dashboard/settings, /dashboard/manage, ...e.t.c)
-const authRequiredPaths = ["/dashboard"];
+// Paths that require employee roles (also its sub-paths like /dashboard/manage, /dashboard/settings,...e.t.c)
+const employeePaths = ["/dashboard", "/dashboard/manage", "/dashboard/settings"];
 
-const roleBasedPaths = {
-  OWNER: ["/dashboard/accounts"],
-  EMPLOYEE: ["/dashboard/profile", "/dashboard/orders"], // example employee routes
-};
+// Paths that require owner roles
+const ownerPaths = ["/dashboard/accounts", "/dashboard/settings"].concat(employeePaths);
 
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
+  console.log(request.cookies);
   const refreshToken = request.cookies.get("refreshToken")?.value;
-
+  const decodedAccessToken = accessToken ? jwtDecode<{ role: string }>(accessToken) : null;
+  const userRole = decodedAccessToken?.role;
   // This if code block is to check if the user is trying to access a restricted path without an appropriate role
   // We have 2 different roles: Employee and Owner, Employee can not access restricted routes
-  if (accessToken) {
-    try {
-      const decodedAccessToken = jwtDecode<{ role: string }>(accessToken);
-      const userRole = decodedAccessToken.role;
+  // if (accessToken) {
+  //   try {
+  //     const decodedAccessToken = jwtDecode<{ role: string }>(accessToken);
+  //     const userRole = decodedAccessToken.role;
+  //     if (userRole === "Employee" && pathname === "/dashboard/accounts") {
+  //       const response = NextResponse.redirect(new URL("/dashboard/manage", request.url));
+  //       // Add cache control headers to prevent caching
+  //       response.headers.set("Cache-Control", "no-store, max-age=0");
+  //       return response;
+  //     } else {
+  //       const response = NextResponse.next();
+  //       response.headers.set("Cache-Control", "no-store, max-age=0");
+  //       return response;
+  //     }
+  //   } catch {
+  //     const response = NextResponse.redirect(new URL("/login", request.url));
+  //     response.headers.set("Cache-Control", "no-store, max-age=0");
+  //     response.cookies.delete("accessToken");
+  //     response.cookies.delete("refreshToken");
+  //     return response;
+  //   }
+  // }
 
-      const isRestrictedPath = Object.entries(roleBasedPaths).some(([role, paths]) => {
-        return paths.some((path) => pathname.startsWith(path)) && role !== userRole;
-      });
+  if (accessToken && userRole) {
+    const isOwnerPath =
+      ownerPaths.some((path) => pathname.startsWith(path)) && !employeePaths.some((path) => pathname === path);
 
-      if (isRestrictedPath) {
-        return NextResponse.redirect(new URL("/dashboard/manage", request.url));
-      }
-    } catch {
-      const response = NextResponse.redirect(new URL("/login", request.url));
-      response.cookies.delete("accessToken");
-      response.cookies.delete("refreshToken");
-      return response;
+    if (userRole === "Employee" && isOwnerPath) {
+      return NextResponse.redirect(new URL("/dashboard/manage", request.url));
     }
+    return NextResponse.next();
   }
 
   // Skip middleware for static files and API routes
@@ -51,8 +64,7 @@ export const middleware = async (request: NextRequest) => {
   }
 
   if (
-    (publicPaths.some((path) => pathname.startsWith(path)) ||
-      authRequiredPaths.some((path) => pathname.startsWith(path))) &&
+    (publicPaths.some((path) => pathname.startsWith(path)) || ownerPaths.some((path) => pathname.startsWith(path))) &&
     !accessToken &&
     refreshToken
   ) {
@@ -101,7 +113,10 @@ export const middleware = async (request: NextRequest) => {
   // }
 
   // Redirect unauthenticated users to login for protected paths
-  if (authRequiredPaths.some((path) => pathname.startsWith(path)) && !accessToken) {
+  if (
+    (ownerPaths.some((path) => pathname.startsWith(path)) && !accessToken) ||
+    (employeePaths.some((path) => pathname.startsWith(path)) && !accessToken)
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
@@ -116,5 +131,6 @@ export const middleware = async (request: NextRequest) => {
 // This is a Next.js configuration object that specifies the matcher for the middleware.
 export const config = {
   // This matcher will match all paths except for the ones starting with: api, _next/static, _next/image, favicon.ico, sitemap.xml, robots.txt
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
+  // matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
+  matcher: ["/", "/dashboard/:path*", "/login", "/refresh-token"],
 };

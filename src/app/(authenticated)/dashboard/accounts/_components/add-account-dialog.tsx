@@ -56,7 +56,7 @@ export default function AddAccountDialog() {
           <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Tạo tài khoản</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-screen overflow-auto">
+      <DialogContent className="max-h-screen overflow-auto sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Tạo tài khoản</DialogTitle>
           <DialogDescription>Các trường tên, email, mật khẩu là bắt buộc</DialogDescription>
@@ -74,8 +74,8 @@ export default function AddAccountDialog() {
                 name="avatar"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex gap-2 items-start justify-start">
-                      <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
+                    <div className="flex items-start justify-start gap-2">
+                      <Avatar className="aspect-square h-[100px] w-[100px] rounded-md object-cover">
                         <AvatarImage src={previewAvatarFromFile} />
                         <AvatarFallback className="rounded-none">{name.slice(0, 2) || "Avatar"}</AvatarFallback>
                       </Avatar>

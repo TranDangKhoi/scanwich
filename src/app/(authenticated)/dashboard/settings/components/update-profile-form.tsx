@@ -125,10 +125,10 @@ export default function UpdateProfileForm() {
                 name="avatar"
                 render={({ field }) => (
                   <FormItem>
-                    <div className="flex gap-2 items-start justify-start">
-                      <Avatar className="shrink-0 rounded-md object-cover w-[100px] h-[100px]">
+                    <div className="flex items-start justify-start gap-2">
+                      <Avatar className="h-[100px] w-[100px] shrink-0 rounded-md object-cover">
                         <AvatarImage src={(previewAvatar as string) ?? undefined} />
-                        <AvatarFallback className="rounded-none font-bold flex items-center shrink-0 justify-center">
+                        <AvatarFallback className="flex shrink-0 items-center justify-center rounded-none font-bold">
                           {myProfileData?.payload.data.name.slice(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -179,7 +179,7 @@ export default function UpdateProfileForm() {
                 )}
               />
 
-              <div className=" items-center gap-2 md:ml-auto flex">
+              <div className="flex items-center gap-2 md:ml-auto">
                 <Button
                   variant="outline"
                   size="sm"

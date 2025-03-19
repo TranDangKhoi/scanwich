@@ -59,7 +59,7 @@ export const columns: ColumnDef<TAccount>[] = [
     header: "Ảnh đại diện",
     cell: ({ row }) => (
       <div>
-        <Avatar className="aspect-square w-[100px] h-[100px] rounded-md object-cover">
+        <Avatar className="aspect-square h-[100px] w-[100px] rounded-md object-cover">
           <AvatarImage src={row.getValue("avatar")} />
           <AvatarFallback className="rounded-none">{row.original.name}</AvatarFallback>
         </Avatar>
@@ -239,7 +239,7 @@ export default function AccountTable() {
           </Table>
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
-          <div className="text-xs text-muted-foreground py-4 flex-1 ">
+          <div className="flex-1 py-4 text-xs text-muted-foreground">
             Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong <strong>{data.length}</strong>{" "}
             kết quả
           </div>

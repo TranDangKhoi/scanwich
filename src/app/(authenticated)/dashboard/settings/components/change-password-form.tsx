@@ -129,7 +129,7 @@ export default function ChangePasswordForm() {
                   </FormItem>
                 )}
               />
-              <div className=" items-center gap-2 md:ml-auto flex">
+              <div className="flex items-center gap-2 md:ml-auto">
                 <Button
                   variant="outline"
                   type="reset"

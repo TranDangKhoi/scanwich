@@ -23,7 +23,7 @@ export default function NavigationBar() {
           ></Image>
           <span className="sr-only">Scanwich</span>
         </Link>
-        <NavItems className="text-muted-foreground transition-colors hover:text-foreground flex-shrink-0" />
+        <NavItems className="flex-shrink-0 text-muted-foreground transition-colors hover:text-foreground" />
       </nav>
       <Sheet>
         <SheetTrigger asChild>

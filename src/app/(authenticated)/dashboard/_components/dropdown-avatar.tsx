@@ -55,7 +55,7 @@ export default function DropdownAvatar() {
           size="icon"
           className="overflow-hidden rounded-full"
         >
-          <Avatar className="w-full h-full">
+          <Avatar className="h-full w-full">
             <AvatarImage
               src={myProfileData?.payload.data.avatar ?? undefined}
               alt={myProfileData?.payload.data.name}
@@ -65,24 +65,26 @@ export default function DropdownAvatar() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="flex items-center gap-2">
-          <span>{myProfileData?.payload.data.name}</span>
-          <Badge className="rounded-full">{myProfileData?.payload.data.role}</Badge>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link
-            href={PATH.DASHBOARD_SETTINGS}
-            className="cursor-pointer"
-          >
-            Cài đặt
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
-      </DropdownMenuContent>
+      {myProfileData?.payload.data && (
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel className="flex items-center gap-2">
+            <span>{myProfileData?.payload.data.name}</span>
+            <Badge className="rounded-full">{myProfileData?.payload.data.role}</Badge>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link
+              href={PATH.DASHBOARD_SETTINGS}
+              className="cursor-pointer"
+            >
+              Cài đặt
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
+        </DropdownMenuContent>
+      )}
     </DropdownMenu>
   );
 }
