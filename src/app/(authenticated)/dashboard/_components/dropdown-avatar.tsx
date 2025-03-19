@@ -1,5 +1,6 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
