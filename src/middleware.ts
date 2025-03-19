@@ -19,35 +19,11 @@ const ownerPaths = ["/dashboard/accounts", "/dashboard/settings"].concat(employe
 export const middleware = async (request: NextRequest) => {
   const { pathname } = request.nextUrl;
   const accessToken = request.cookies.get("accessToken")?.value;
-  console.log(request.cookies);
   const refreshToken = request.cookies.get("refreshToken")?.value;
   const decodedAccessToken = accessToken ? jwtDecode<{ role: string }>(accessToken) : null;
   const userRole = decodedAccessToken?.role;
-  // This if code block is to check if the user is trying to access a restricted path without an appropriate role
-  // We have 2 different roles: Employee and Owner, Employee can not access restricted routes
-  // if (accessToken) {
-  //   try {
-  //     const decodedAccessToken = jwtDecode<{ role: string }>(accessToken);
-  //     const userRole = decodedAccessToken.role;
-  //     if (userRole === "Employee" && pathname === "/dashboard/accounts") {
-  //       const response = NextResponse.redirect(new URL("/dashboard/manage", request.url));
-  //       // Add cache control headers to prevent caching
-  //       response.headers.set("Cache-Control", "no-store, max-age=0");
-  //       return response;
-  //     } else {
-  //       const response = NextResponse.next();
-  //       response.headers.set("Cache-Control", "no-store, max-age=0");
-  //       return response;
-  //     }
-  //   } catch {
-  //     const response = NextResponse.redirect(new URL("/login", request.url));
-  //     response.headers.set("Cache-Control", "no-store, max-age=0");
-  //     response.cookies.delete("accessToken");
-  //     response.cookies.delete("refreshToken");
-  //     return response;
-  //   }
-  // }
 
+  // Redirect to the appropriate dashboard based on the user's role
   if (accessToken && userRole) {
     const isOwnerPath =
       ownerPaths.some((path) => pathname.startsWith(path)) && !employeePaths.some((path) => pathname === path);
@@ -131,6 +107,5 @@ export const middleware = async (request: NextRequest) => {
 // This is a Next.js configuration object that specifies the matcher for the middleware.
 export const config = {
   // This matcher will match all paths except for the ones starting with: api, _next/static, _next/image, favicon.ico, sitemap.xml, robots.txt
-  // matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
-  matcher: ["/", "/dashboard/:path*", "/login", "/refresh-token"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"],
 };

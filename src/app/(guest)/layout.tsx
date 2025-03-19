@@ -1,4 +1,3 @@
-import DropdownAvatar from "src/app/(authenticated)/dashboard/_components/dropdown-avatar";
 import NavigationBar from "src/app/(guest)/(auth)/login/components/navigation-bar";
 import { ThemeToggle } from "src/components/ui/theme-toggle";
 

@@ -91,6 +91,7 @@ export const columns: ColumnDef<TAccount>[] = [
   },
   {
     id: "actions",
+    header: "Hành động",
     cell: function Actions({ row }) {
       const { setEmployeeIdEdit, setEmployeeDelete } = useContext(AccountTableContext);
       const openEditEmployee = () => {
@@ -131,7 +132,6 @@ export default function AccountTable() {
   // const params = Object.fromEntries(searchParam.entries())
   const [employeeIdEdit, setEmployeeIdEdit] = useState<number | undefined>();
   const [employeeDelete, setEmployeeDelete] = useState<TAccount | null>(null);
-  const data: any[] = [];
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -143,11 +143,12 @@ export default function AccountTable() {
 
   const { data: accountListData } = useQuery({
     queryKey: ["accounts"],
-    queryFn: accountApi.getAllAccounts,
+    queryFn: () => accountApi.getAllAccounts(),
   });
+  const accountList = accountListData?.payload.data ?? [];
 
   const table = useReactTable({
-    data,
+    data: accountList,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -240,8 +241,8 @@ export default function AccountTable() {
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 py-4 text-xs text-muted-foreground">
-            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong <strong>{data.length}</strong>{" "}
-            kết quả
+            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong{" "}
+            <strong>{accountList?.length}</strong> kết quả
           </div>
           <div>
             <AutoPagination

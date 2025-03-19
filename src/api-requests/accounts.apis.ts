@@ -1,5 +1,6 @@
 import http from "src/lib/http";
 import {
+  TAccountListRes,
   TAccountRes,
   TChangePasswordBody,
   TCreateEmployeeAccountBody,
@@ -21,7 +22,7 @@ export const accountApi = {
     http.put<TAccountRes, TChangePasswordBody>("/accounts/change-password", body),
 
   // Owner APIs
-  getAllAccounts: () => http.get<TAccountRes[]>("/accounts"),
+  getAllAccounts: () => http.get<TAccountListRes>("/accounts"),
   getAccountDetail: (id: string) => http.get<TAccountRes>(`/accounts/detail/${id}`),
   addAccount: (body: TCreateEmployeeAccountBody) =>
     http.post<TAccountRes, TCreateEmployeeAccountBody>("/accounts", body),
