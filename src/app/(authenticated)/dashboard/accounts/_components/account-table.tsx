@@ -59,7 +59,7 @@ export const columns: ColumnDef<TAccount>[] = [
     header: "Ảnh đại diện",
     cell: ({ row }) => (
       <div>
-        <Avatar className="aspect-square h-[100px] w-[100px] rounded-md object-cover">
+        <Avatar className="aspect-square h-[50px] w-[50px] rounded-md object-cover md:h-[100px] md:w-[100px]">
           <AvatarImage src={row.getValue("avatar")} />
           <AvatarFallback className="rounded-none">{row.original.name}</AvatarFallback>
         </Avatar>
@@ -70,7 +70,7 @@ export const columns: ColumnDef<TAccount>[] = [
     accessorKey: "name",
     id: "name",
     header: "Họ và tên",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="text-truncate capitalize">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "email",

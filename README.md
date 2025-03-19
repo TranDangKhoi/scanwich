@@ -51,10 +51,9 @@ Umm, I'll get to that. Probably there'll never be a start because you have no ac
 
 ## Stuffs that can be improved
 
-- Improve Avatar selection
+- Improve Avatar selection UX
 - Use Tanstack Virtual to virtualize the account table (and other tables)
 - Better authentication logic -> Maybe switch to the old logic that I've been familiar with: Call refresh token API only when receive a 401 error and it's token expired error, and for the tokens inside cookie, we keep the current logic
-- More settings for setting page
+- More settings for setting page, use Ctrl + K to navigate, ...e.t.c
 - Use react-use for the useKeyboard hook -> require owner to use a combined keys to delete an account
-
-  > And more...
+- > And more...
