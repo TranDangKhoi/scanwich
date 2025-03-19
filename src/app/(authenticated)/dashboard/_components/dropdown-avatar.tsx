@@ -1,6 +1,5 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -47,7 +46,7 @@ export default function DropdownAvatar() {
       });
     }
   };
-
+  if (!myProfileData) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -66,26 +65,24 @@ export default function DropdownAvatar() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      {myProfileData?.payload.data && (
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel className="flex items-center gap-2">
-            <span>{myProfileData?.payload.data.name}</span>
-            <Badge className="rounded-full">{myProfileData?.payload.data.role}</Badge>
-          </DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link
-              href={PATH.DASHBOARD_SETTINGS}
-              className="cursor-pointer"
-            >
-              Cài đặt
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
-        </DropdownMenuContent>
-      )}
+      <DropdownMenuContent align="end">
+        <DropdownMenuLabel className="flex items-center gap-2">
+          <span>{myProfileData?.payload.data.name}</span>
+          <Badge className="rounded-full">{myProfileData?.payload.data.role}</Badge>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link
+            href={PATH.DASHBOARD_SETTINGS}
+            className="cursor-pointer"
+          >
+            Cài đặt
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>Hỗ trợ</DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleLogout}>Đăng xuất</DropdownMenuItem>
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 }
