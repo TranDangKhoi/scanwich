@@ -1,5 +1,7 @@
 type EventCallback = (...args: any[]) => void;
 
+// This event emitter's functionality is just like WebSocket's event emitter
+// You emit one event, and then you can listen to that event and then trigger the callback accordingly
 class EventEmitter {
   private events: { [key: string]: EventCallback[] } = {};
 
