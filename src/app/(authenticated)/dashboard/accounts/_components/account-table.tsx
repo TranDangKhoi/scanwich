@@ -20,6 +20,7 @@ import { Button } from "src/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { accountApi } from "src/api-requests/accounts.apis";
 import AddAccountDialog from "src/app/(authenticated)/dashboard/accounts/_components/add-account-dialog";
+import EditAccountDialog from "src/app/(authenticated)/dashboard/accounts/_components/edit-account-dialog";
 import RemoveAccountAlert from "src/app/(authenticated)/dashboard/accounts/_components/remove-account-alert";
 import AutoPagination from "src/components/manual/auto-pagination";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
@@ -104,15 +105,15 @@ export const columns: ColumnDef<TAccount>[] = [
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="ghost"
+              variant="outline"
               className="h-8 w-8 p-0"
             >
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">Mở menu</span>
               <DotsHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Bạn muốn thực hiện?</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={openEditEmployee}>Sửa</DropdownMenuItem>
             <DropdownMenuItem onClick={openDeleteEmployee}>Xóa</DropdownMenuItem>
@@ -178,11 +179,11 @@ export default function AccountTable() {
   return (
     <AccountTableContext.Provider value={{ employeeIdEdit, setEmployeeIdEdit, employeeDelete, setEmployeeDelete }}>
       <div className="w-full">
-        {/* <EditEmployee
+        <EditAccountDialog
           id={employeeIdEdit}
           setId={setEmployeeIdEdit}
           onSubmitSuccess={() => {}}
-        /> */}
+        />
         <RemoveAccountAlert
           employeeDelete={employeeDelete}
           setEmployeeDelete={setEmployeeDelete}

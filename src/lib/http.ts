@@ -246,7 +246,7 @@ const http = {
   put<Response, TBody>(url: string, body: any, options?: Omit<CustomOptions<TBody>, "body"> | undefined) {
     return request<Response, TBody>("PUT", url, { ...options, body });
   },
-  delete<Response>(url: string, body: any, options?: Omit<CustomOptions, "body"> | undefined) {
+  delete<Response>(url: string, body?: any, options?: Omit<CustomOptions, "body"> | undefined) {
     return request<Response>("DELETE", url, { ...options, body });
   },
 };

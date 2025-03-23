@@ -28,4 +28,5 @@ export const accountApi = {
     http.post<TAccountRes, TCreateEmployeeAccountBody>("/accounts", body),
   editAccount: (id: string, body: TUpdateEmployeeAccountBody) =>
     http.post<TAccountRes, TUpdateEmployeeAccountBody>(`/accounts/detail/${id}`, body),
+  removeAccount: (id: string) => http.delete<TAccountRes>(`/accounts/detail/${id}`),
 };

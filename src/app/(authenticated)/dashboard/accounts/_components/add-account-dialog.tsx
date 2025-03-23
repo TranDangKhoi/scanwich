@@ -1,8 +1,12 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PlusCircle, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { accountApi } from "src/api-requests/accounts.apis";
+import { mediaApi } from "src/api-requests/media.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
 import {
@@ -17,30 +21,84 @@ import {
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
+import { handleErrorApi } from "src/lib/utils";
 import { TCreateEmployeeAccountBody, createEmployeeAccountBodySchema } from "src/validations/account.validations";
 
 export default function AddAccountDialog() {
   const [previewImageFile, setPreviewImageFile] = useState<File | null>(null);
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
-  const form = useForm<TCreateEmployeeAccountBody>({
+  const addAccountForm = useForm<TCreateEmployeeAccountBody>({
     resolver: zodResolver(createEmployeeAccountBodySchema),
     defaultValues: {
       name: "",
       email: "",
-      avatar: undefined,
+      avatar: null,
       password: "",
       confirmPassword: "",
     },
   });
-  const defaultAvatarValues = form.watch("avatar");
-  const name = form.watch("name");
-  const previewAvatarFromFile = useMemo(() => {
+
+  const defaultAvatarValues = addAccountForm.watch("avatar");
+  const name = addAccountForm.watch("name");
+  const previewAvatar = useMemo(() => {
     if (previewImageFile) {
       return URL.createObjectURL(previewImageFile);
     }
     return defaultAvatarValues;
   }, [previewImageFile, defaultAvatarValues]);
+
+  const handleReset = () => {
+    addAccountForm.reset({
+      avatar: defaultAvatarValues,
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+    setPreviewImageFile(null);
+  };
+
+  const addAccountMutation = useMutation({
+    mutationFn: (body: TCreateEmployeeAccountBody) => accountApi.addAccount(body),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      toast.success(
+        <p>
+          Tài khoản <span className="font-bold">{data.payload.data.name}</span> đã được thêm thành công
+        </p>,
+      );
+      setOpen(false);
+      handleReset();
+    },
+  });
+
+  const uploadImageMutation = useMutation({
+    mutationKey: ["upload-image"],
+    mutationFn: (body: FormData) => mediaApi.uploadImage(body),
+  });
+
+  const handleAddAccount = addAccountForm.handleSubmit(async (data) => {
+    let newAvatarUrl = null;
+    try {
+      if (previewImageFile) {
+        const formData = new FormData();
+        formData.append("file", previewImageFile);
+        const result = await uploadImageMutation.mutateAsync(formData);
+        newAvatarUrl = result.payload.data;
+      }
+      addAccountMutation.mutate({
+        ...data,
+        avatar: previewImageFile ? newAvatarUrl : defaultAvatarValues,
+      });
+    } catch (error) {
+      handleErrorApi({
+        error,
+        defaultMessage: "Có lỗi xảy ra khi thêm tài khoản",
+      });
+    }
+  });
 
   return (
     <Dialog
@@ -61,22 +119,24 @@ export default function AddAccountDialog() {
           <DialogTitle>Tạo tài khoản</DialogTitle>
           <DialogDescription>Các trường tên, email, mật khẩu là bắt buộc</DialogDescription>
         </DialogHeader>
-        <Form {...form}>
+        <Form {...addAccountForm}>
           <form
-            noValidate
             className="grid auto-rows-max items-start gap-4 md:gap-8"
+            onSubmit={handleAddAccount}
+            onReset={handleReset}
             id="add-employee-form"
             autoComplete="off"
+            noValidate
           >
             <div className="grid gap-4 py-4">
               <FormField
-                control={form.control}
+                control={addAccountForm.control}
                 name="avatar"
                 render={({ field }) => (
                   <FormItem>
                     <div className="flex items-start justify-start gap-2">
                       <Avatar className="aspect-square h-[100px] w-[100px] rounded-md object-cover">
-                        <AvatarImage src={previewAvatarFromFile} />
+                        <AvatarImage src={(previewAvatar as string) ?? undefined} />
                         <AvatarFallback className="rounded-none">{name.slice(0, 2) || "Avatar"}</AvatarFallback>
                       </Avatar>
                       <input
@@ -106,7 +166,7 @@ export default function AddAccountDialog() {
               />
 
               <FormField
-                control={form.control}
+                control={addAccountForm.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
@@ -125,7 +185,7 @@ export default function AddAccountDialog() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={addAccountForm.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -144,7 +204,7 @@ export default function AddAccountDialog() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={addAccountForm.control}
                 name="password"
                 render={({ field }) => (
                   <FormItem>
@@ -165,7 +225,7 @@ export default function AddAccountDialog() {
                 )}
               />
               <FormField
-                control={form.control}
+                control={addAccountForm.control}
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
@@ -188,6 +248,13 @@ export default function AddAccountDialog() {
           </form>
         </Form>
         <DialogFooter>
+          <Button
+            type="reset"
+            variant="outline"
+            form="add-employee-form"
+          >
+            Nhập lại
+          </Button>
           <Button
             type="submit"
             form="add-employee-form"

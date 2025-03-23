@@ -27,18 +27,28 @@ export type TAccountListRes = z.TypeOf<typeof accountListResSchema>;
 
 export const createEmployeeAccountBodySchema = z
   .object({
-    name: z.string().trim().min(2).max(256),
-    email: z.string().email(),
-    avatar: z.string().url().optional(),
-    password: z.string().min(6).max(100),
-    confirmPassword: z.string().min(6).max(100),
+    name: z
+      .string()
+      .trim()
+      .min(2, "Tên người dùng cần có ít nhất 2 ký tự")
+      .max(256, "Tên người dùng không được vượt quá 256 ký tự"),
+    email: z.string().email("Định dạng e-mail không hợp lệ"),
+    avatar: z
+      .union([z.string().url(), z.instanceof(File)])
+      .optional()
+      .nullable(),
+    password: z.string().min(6, "Mật khẩu cần có ít nhất 6 ký tự").max(100, "Mật khẩu không được vượt quá 100 ký tự"),
+    confirmPassword: z
+      .string()
+      .min(6, "Mật khẩu xác nhận cần có ít nhất 6 ký tự")
+      .max(100, "Mật khẩu xác nhận không được vượt quá 100 ký tự"),
   })
   .strict()
   .superRefine(({ confirmPassword, password }, ctx) => {
     if (confirmPassword !== password) {
       ctx.addIssue({
         code: "custom",
-        message: "Mật khẩu không khớp",
+        message: "Mật khẩu xác thực không khớp",
         path: ["confirmPassword"],
       });
     }
