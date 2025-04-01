@@ -30,7 +30,7 @@ export default function EditAccountDialog({
   onSubmitSuccess,
 }: {
   id?: number | undefined;
-  setId: (value: number | undefined) => void;
+  setId: React.Dispatch<React.SetStateAction<number | undefined>>;
   onSubmitSuccess?: () => void;
 }) {
   const [previewImageFile, setPreviewImageFile] = useState<File | null>(null);
@@ -130,6 +130,9 @@ export default function EditAccountDialog({
         password: undefined,
         confirmPassword: undefined,
       });
+
+      // Clear preview image
+      setPreviewImageFile(null);
     }
   }, [account, editAccountForm]);
 
@@ -139,6 +142,7 @@ export default function EditAccountDialog({
       onOpenChange={(value) => {
         if (!value) {
           setId(undefined);
+          handleReset();
         }
       }}
     >

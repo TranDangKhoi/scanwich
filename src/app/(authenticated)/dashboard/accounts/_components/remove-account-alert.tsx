@@ -1,3 +1,6 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { accountApi } from "src/api-requests/accounts.apis";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "src/components/ui/alert-dialog";
+import { handleErrorApi } from "src/lib/utils";
 import { TAccount } from "src/validations/account.validations";
 
 export default function RemoveAccountAlert({
@@ -15,8 +19,35 @@ export default function RemoveAccountAlert({
   setEmployeeDelete,
 }: {
   employeeDelete: TAccount | null;
-  setEmployeeDelete: (value: TAccount | null) => void;
+  setEmployeeDelete: React.Dispatch<React.SetStateAction<TAccount | null>>;
 }) {
+  const queryClient = useQueryClient();
+  const accountDeleteMutation = useMutation({
+    mutationFn: (id: number) => accountApi.removeAccount(id),
+    onSuccess: (data) => {
+      setEmployeeDelete(null);
+      queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      toast.success(
+        <p>
+          Tài khoản <span className="font-bold">{data.payload.data.name}</span> đã được xóa thành công
+        </p>,
+      );
+    },
+  });
+
+  const handleDeleteAccount = () => {
+    try {
+      if (employeeDelete) {
+        accountDeleteMutation.mutate(employeeDelete.id);
+      }
+    } catch (error) {
+      handleErrorApi({
+        error,
+        defaultMessage: "Xóa tài khoản không thành công, vui lòng thử lại sau",
+      });
+    }
+  };
+
   return (
     <AlertDialog
       open={Boolean(employeeDelete)}
@@ -37,7 +68,10 @@ export default function RemoveAccountAlert({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Không xóa nữa</AlertDialogCancel>
-          <AlertDialogAction className="bg-destructive text-primary hover:bg-destructive-hover hover:text-primary">
+          <AlertDialogAction
+            onClick={handleDeleteAccount}
+            className="bg-destructive text-primary hover:bg-destructive-hover hover:text-primary"
+          >
             Xóa vĩnh viễn
           </AlertDialogAction>
         </AlertDialogFooter>

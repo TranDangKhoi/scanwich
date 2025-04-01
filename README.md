@@ -55,6 +55,7 @@ Umm, I'll get to that. Probably there'll never be a start because you have no ac
 - Client-side image file restrictions (file size, file type, ...e.t.c) and "maybe" we can make an avatar crop function
 - Improve Password field UX (create a show password function)
 - Improve overall look for the dashboard/accounts route
+- Update a feature that will not let the user to delete their own account
 - Refactor the Tanstack Query logic to a seperated useHook file
 - Use Tanstack Virtual to virtualize the account table (and other tables)
 - Better authentication logic -> Maybe switch to the old logic that I've been familiar with: Call refresh token API only when receive a 401 error and it's token expired error, and for the tokens inside cookie, we keep the current logic
