@@ -60,7 +60,10 @@ export const updateEmployeeAccountBodySchema = z
   .object({
     name: z.string().trim().min(2).max(256),
     email: z.string().email(),
-    avatar: z.string().url().optional(),
+    avatar: z
+      .union([z.string().url(), z.instanceof(File)])
+      .optional()
+      .nullable(),
     changePassword: z.boolean().optional(),
     password: z.string().min(6).max(100).optional(),
     confirmPassword: z.string().min(6).max(100).optional(),

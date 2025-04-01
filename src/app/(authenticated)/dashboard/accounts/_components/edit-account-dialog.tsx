@@ -1,8 +1,12 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Upload } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { accountApi } from "src/api-requests/accounts.apis";
+import { mediaApi } from "src/api-requests/media.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
 import {
@@ -17,6 +21,7 @@ import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";
 import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
 import { Switch } from "src/components/ui/switch";
+import { handleErrorApi } from "src/lib/utils";
 import { TUpdateEmployeeAccountBody, updateEmployeeAccountBodySchema } from "src/validations/account.validations";
 
 export default function EditAccountDialog({
@@ -29,6 +34,7 @@ export default function EditAccountDialog({
   onSubmitSuccess?: () => void;
 }) {
   const [previewImageFile, setPreviewImageFile] = useState<File | null>(null);
+  const queryClient = useQueryClient();
   const avatarInputRef = useRef<HTMLInputElement | null>(null);
   const editAccountForm = useForm<TUpdateEmployeeAccountBody>({
     resolver: zodResolver(updateEmployeeAccountBodySchema),
@@ -41,6 +47,7 @@ export default function EditAccountDialog({
       changePassword: false,
     },
   });
+
   const defaultAvatarValues = editAccountForm.watch("avatar");
   const name = editAccountForm.watch("name");
   const changePassword = editAccountForm.watch("changePassword");
@@ -50,6 +57,81 @@ export default function EditAccountDialog({
     }
     return defaultAvatarValues;
   }, [previewImageFile, defaultAvatarValues]);
+
+  const { data: accountDetail } = useQuery({
+    queryKey: ["account", id],
+    queryFn: () => accountApi.getAccountDetail(id!),
+    enabled: Boolean(id),
+  });
+  const account = accountDetail?.payload.data;
+
+  const uploadImageMutation = useMutation({
+    mutationKey: ["upload-image"],
+    mutationFn: (body: FormData) => mediaApi.uploadImage(body),
+  });
+
+  const editAccountMutation = useMutation({
+    mutationFn: (body: TUpdateEmployeeAccountBody) => accountApi.editAccount(id!, body),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({
+        queryKey: ["accounts"],
+      });
+      setId(undefined);
+      toast.success(
+        <p>
+          Tài khoản <span className="font-bold">{data.payload.data.name}</span> đã được cập nhật thành công
+        </p>,
+      );
+      onSubmitSuccess?.();
+    },
+  });
+
+  const handleEditAccount = editAccountForm.handleSubmit(async (data) => {
+    let newAvatarUrl = null;
+    try {
+      if (previewImageFile) {
+        const formData = new FormData();
+        formData.append("file", previewImageFile);
+        const result = await uploadImageMutation.mutateAsync(formData);
+        newAvatarUrl = result.payload.data;
+      }
+      editAccountMutation.mutate({
+        ...data,
+        avatar: previewImageFile ? newAvatarUrl : defaultAvatarValues,
+      });
+    } catch (error) {
+      console.log(error);
+      handleErrorApi({
+        error,
+        setError: editAccountForm.setError,
+        defaultMessage: "Đã có lỗi xảy ra khi cập nhật thông tin người dùng",
+      });
+    }
+  });
+
+  const handleReset = () => {
+    editAccountForm.reset({
+      avatar: account?.avatar as string,
+      name: account?.name,
+      email: account?.email,
+      changePassword: false,
+    });
+    // Clear preview image
+    setPreviewImageFile(null);
+  };
+
+  useEffect(() => {
+    if (account) {
+      editAccountForm.reset({
+        avatar: account.avatar as string,
+        name: account.name,
+        email: account.email,
+        changePassword: false,
+        password: undefined,
+        confirmPassword: undefined,
+      });
+    }
+  }, [account, editAccountForm]);
 
   return (
     <Dialog
@@ -67,9 +149,11 @@ export default function EditAccountDialog({
         </DialogHeader>
         <Form {...editAccountForm}>
           <form
-            noValidate
             className="grid auto-rows-max items-start gap-4 md:gap-8"
             id="edit-employee-form"
+            onSubmit={handleEditAccount}
+            onReset={handleReset}
+            noValidate
           >
             <div className="grid gap-4 py-4">
               <FormField
@@ -79,7 +163,7 @@ export default function EditAccountDialog({
                   <FormItem>
                     <div className="flex items-start justify-start gap-2">
                       <Avatar className="aspect-square h-[100px] w-[100px] rounded-md object-cover">
-                        <AvatarImage src={previewAvatarFromFile} />
+                        <AvatarImage src={previewAvatarFromFile as string} />
                         <AvatarFallback className="rounded-none">{name || "Avatar"}</AvatarFallback>
                       </Avatar>
                       <input
@@ -212,6 +296,13 @@ export default function EditAccountDialog({
           </form>
         </Form>
         <DialogFooter>
+          <Button
+            type="reset"
+            variant="outline"
+            form="edit-employee-form"
+          >
+            Đặt lại
+          </Button>
           <Button
             type="submit"
             form="edit-employee-form"
