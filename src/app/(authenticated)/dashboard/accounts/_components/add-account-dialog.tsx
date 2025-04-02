@@ -40,18 +40,18 @@ export default function AddAccountDialog() {
     },
   });
 
-  const defaultAvatarValues = addAccountForm.watch("avatar");
+  const defaultAvatar = addAccountForm.watch("avatar");
   const name = addAccountForm.watch("name");
   const previewAvatar = useMemo(() => {
     if (previewImageFile) {
       return URL.createObjectURL(previewImageFile);
     }
-    return defaultAvatarValues;
-  }, [previewImageFile, defaultAvatarValues]);
+    return defaultAvatar;
+  }, [previewImageFile, defaultAvatar]);
 
   const handleReset = () => {
     addAccountForm.reset({
-      avatar: defaultAvatarValues,
+      avatar: defaultAvatar,
       name: "",
       email: "",
       password: "",
@@ -90,7 +90,7 @@ export default function AddAccountDialog() {
       }
       addAccountMutation.mutate({
         ...data,
-        avatar: previewImageFile ? newAvatarUrl : defaultAvatarValues,
+        avatar: previewImageFile ? newAvatarUrl : defaultAvatar,
       });
     } catch (error) {
       handleErrorApi({

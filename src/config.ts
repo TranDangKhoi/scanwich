@@ -4,6 +4,7 @@ import { envSchema } from "src/validations/env.validations";
 const parsedEnvConfig = envSchema.safeParse({
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
   NEXT_PUBLIC_PRODUCTION_API_URL: process.env.NEXT_PUBLIC_PRODUCTION_API_URL,
+  NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
 });
 
 if (!parsedEnvConfig.success) {

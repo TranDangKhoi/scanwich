@@ -48,15 +48,15 @@ export default function EditAccountDialog({
     },
   });
 
-  const defaultAvatarValues = editAccountForm.watch("avatar");
+  const defaultAvatar = editAccountForm.watch("avatar");
   const name = editAccountForm.watch("name");
   const changePassword = editAccountForm.watch("changePassword");
   const previewAvatarFromFile = useMemo(() => {
     if (previewImageFile) {
       return URL.createObjectURL(previewImageFile);
     }
-    return defaultAvatarValues;
-  }, [previewImageFile, defaultAvatarValues]);
+    return defaultAvatar;
+  }, [previewImageFile, defaultAvatar]);
 
   const { data: accountDetail } = useQuery({
     queryKey: ["account", id],
@@ -97,7 +97,7 @@ export default function EditAccountDialog({
       }
       editAccountMutation.mutate({
         ...data,
-        avatar: previewImageFile ? newAvatarUrl : defaultAvatarValues,
+        avatar: previewImageFile ? newAvatarUrl : defaultAvatar,
       });
     } catch (error) {
       console.log(error);
