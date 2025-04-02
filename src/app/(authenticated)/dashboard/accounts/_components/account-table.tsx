@@ -14,7 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useSearchParams } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Button } from "src/components/ui/button";
 // import EditEmployee from "src/app/manage/accounts/edit-employee";
 import { useQuery } from "@tanstack/react-query";
@@ -37,15 +37,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "s
 import { TAccount } from "src/validations/account.validations";
 
 const AccountTableContext = createContext<{
-  setEmployeeIdEdit: (value: number) => void;
+  setEmployeeIdEdit: React.Dispatch<React.SetStateAction<number | undefined>>;
   employeeIdEdit: number | undefined;
   employeeDelete: TAccount | null;
-  setEmployeeDelete: (value: TAccount | null) => void;
+  setEmployeeDelete: React.Dispatch<React.SetStateAction<TAccount | null>>;
 }>({
-  setEmployeeIdEdit: (value: number | undefined) => {},
+  setEmployeeIdEdit: (value: React.SetStateAction<number | undefined>) => {},
   employeeIdEdit: undefined,
   employeeDelete: null,
-  setEmployeeDelete: (value: TAccount | null) => {},
+  setEmployeeDelete: (value: React.SetStateAction<TAccount | null>) => {},
 });
 
 export const columns: ColumnDef<TAccount>[] = [
