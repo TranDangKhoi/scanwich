@@ -38,7 +38,7 @@ export default function UpdateProfileForm() {
     queryFn: accountApi.getMyProfile,
   });
 
-  const defaultAvatarValues = updateProfileForm.watch("avatar");
+  const defaultAvatar = updateProfileForm.watch("avatar");
 
   const updateProfileMutation = useMutation({
     mutationKey: ["update-profile"],
@@ -72,7 +72,7 @@ export default function UpdateProfileForm() {
       updateProfileMutation.mutate(
         {
           name: data.name,
-          avatar: previewImageFile ? newAvatarUrl : defaultAvatarValues,
+          avatar: previewImageFile ? newAvatarUrl : defaultAvatar,
         },
         {
           onSuccess: (data) => {
@@ -103,8 +103,8 @@ export default function UpdateProfileForm() {
     if (previewImageFile) {
       return URL.createObjectURL(previewImageFile);
     }
-    return defaultAvatarValues;
-  }, [defaultAvatarValues, previewImageFile]);
+    return defaultAvatar;
+  }, [defaultAvatar, previewImageFile]);
 
   return (
     <Form {...updateProfileForm}>

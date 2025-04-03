@@ -23,10 +23,10 @@ export const accountApi = {
 
   // Owner APIs
   getAllAccounts: () => http.get<TAccountListRes>("/accounts"),
-  getAccountDetail: (id: string) => http.get<TAccountRes>(`/accounts/detail/${id}`),
+  getAccountDetail: (id: number) => http.get<TAccountRes>(`/accounts/detail/${id}`),
   addAccount: (body: TCreateEmployeeAccountBody) =>
     http.post<TAccountRes, TCreateEmployeeAccountBody>("/accounts", body),
-  editAccount: (id: string, body: TUpdateEmployeeAccountBody) =>
-    http.post<TAccountRes, TUpdateEmployeeAccountBody>(`/accounts/detail/${id}`, body),
-  removeAccount: (id: string) => http.delete<TAccountRes>(`/accounts/detail/${id}`),
+  editAccount: (id: number, body: TUpdateEmployeeAccountBody) =>
+    http.put<TAccountRes, TUpdateEmployeeAccountBody>(`/accounts/detail/${id}`, body),
+  removeAccount: (id: number) => http.delete<TAccountRes>(`/accounts/detail/${id}`),
 };

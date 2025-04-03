@@ -5,7 +5,10 @@ export const createDishBodySchema = z.object({
   name: z.string().min(1).max(256),
   price: z.coerce.number().positive(),
   description: z.string().max(10000),
-  image: z.string().url(),
+  image: z
+    .union([z.string().url(), z.instanceof(File)])
+    .optional()
+    .nullable(),
   status: z.enum(DISH_STATUS_VALUES).optional(),
 });
 
