@@ -41,23 +41,21 @@ import {
 import { Input } from "src/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "src/components/ui/table";
 import { formatCurrency, getVietnameseDishStatus } from "src/lib/dashboard-utils";
-import { TDishListRes } from "src/validations/dish.validations";
-
-type DishItem = TDishListRes["data"][0];
+import { TDish, TDishListRes } from "src/validations/dish.validations";
 
 const DishTableContext = createContext<{
   setDishIdEdit: (value: number) => void;
   dishIdEdit: number | undefined;
-  dishDelete: DishItem | null;
-  setDishDelete: (value: DishItem | null) => void;
+  dishDelete: TDish | null;
+  setDishDelete: (value: TDish | null) => void;
 }>({
   setDishIdEdit: (value: number | undefined) => {},
   dishIdEdit: undefined,
   dishDelete: null,
-  setDishDelete: (value: DishItem | null) => {},
+  setDishDelete: (value: TDish | null) => {},
 });
 
-export const columns: ColumnDef<DishItem>[] = [
+const columns: ColumnDef<TDish>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -138,8 +136,8 @@ function AlertDialogDeleteDish({
   dishDelete,
   setDishDelete,
 }: {
-  dishDelete: DishItem | null;
-  setDishDelete: (value: DishItem | null) => void;
+  dishDelete: TDish | null;
+  setDishDelete: (value: TDish | null) => void;
 }) {
   return (
     <AlertDialog
@@ -173,7 +171,7 @@ export default function DishTable() {
   const page = searchParam.get("page") ? Number(searchParam.get("page")) : 1;
   const pageIndex = page - 1;
   const [dishIdEdit, setDishIdEdit] = useState<number | undefined>();
-  const [dishDelete, setDishDelete] = useState<DishItem | null>(null);
+  const [dishDelete, setDishDelete] = useState<TDish | null>(null);
   const data: any[] = [];
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
