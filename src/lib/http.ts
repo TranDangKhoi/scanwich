@@ -113,7 +113,6 @@ const request = async <TResponse, TBody = unknown>(
 ) => {
   // Chuyển đổi body thành chuỗi JSON nếu có.
   const body = options?.body instanceof FormData ? options?.body : JSON.stringify(options?.body);
-
   // Các header mặc định cho mọi yêu cầu.
   let baseHeaders = {
     ...(!(options?.body instanceof FormData) && { "Content-Type": "application/json" }),
@@ -136,6 +135,7 @@ const request = async <TResponse, TBody = unknown>(
 
   // Tạo URL đầy đủ bằng cách kết hợp baseUrl và đường dẫn tương đối.
   const fullUrl = url.startsWith("/") ? `${baseUrl}${url}` : `${baseUrl}/${url}`;
+  
 
   // Thực hiện yêu cầu HTTP bằng `fetch`.
   const res = await fetch(fullUrl, {

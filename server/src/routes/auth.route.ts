@@ -108,6 +108,7 @@ export default async function authRoutes(fastify: FastifyInstance, options: Fast
       },
     },
     async (request, reply) => {
+      console.log("Body at BE:", request.body);
       const result = await refreshTokenController(request.body.refreshToken);
       reply.send({
         message: "Lấy token mới thành công",

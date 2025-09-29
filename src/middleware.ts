@@ -44,8 +44,16 @@ export const middleware = async (request: NextRequest) => {
     !accessToken &&
     refreshToken
   ) {
-    const result = await authApi.refreshToken({ refreshToken });
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = result.payload.data;
+    console.log("cookie refreshToken in middleware", refreshToken);
+    const result = await fetch("http://localhost:4000/auth/refresh-token", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ refreshToken }),
+});
+      console.log("status", result.status); // check status code (200, 404, 500...)
+const data = await result.json().catch(() => null);
+console.log("data", data);
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data;
     const decodedAccessToken = jwtDecode(newAccessToken);
     const decodedRefreshToken = jwtDecode(newRefreshToken);
     if (newAccessToken) {

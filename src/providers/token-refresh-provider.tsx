@@ -1,6 +1,6 @@
 "use client";
 import { jwtDecode } from "jwt-decode";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { authApi } from "src/api-requests/auth.apis";
 import { clientAccessToken } from "src/lib/http";
@@ -10,6 +10,7 @@ const NON_REFRESH_TOKEN_ROUTES = ["/login", "/refresh-token", "/"];
 
 export default function TokenRefreshProvider() {
   const pathname = usePathname();
+  const router = useRouter();
   const refreshTokenIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const refreshingTokenRef = useRef<boolean | null>(null);
   useEffect(() => {
@@ -49,6 +50,8 @@ export default function TokenRefreshProvider() {
           clientAccessToken.value = newAccessToken;
         } catch (error) {
           clearInterval(refreshTokenIntervalRef.current!);
+          refreshTokenIntervalRef.current = null;
+          router.push("/login");
           return error;
         } finally {
           refreshingTokenRef.current = false;
@@ -64,6 +67,6 @@ export default function TokenRefreshProvider() {
         refreshTokenIntervalRef.current = null;
       }
     };
-  }, [pathname]);
+  }, [pathname, router]);
   return <div></div>;
 }

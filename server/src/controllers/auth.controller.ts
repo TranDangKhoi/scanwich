@@ -69,6 +69,7 @@ export const refreshTokenController = async (refreshToken: string) => {
       account: true,
     },
   });
+  console.log("hehe", refreshTokenDoc);
   const account = refreshTokenDoc.account;
   const newAccessToken = signAccessToken({
     userId: account.id,
