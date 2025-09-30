@@ -212,18 +212,23 @@ const request = async <TResponse, TBody = unknown>(
     }
   }
 
-  // Cập nhật token phiên đăng nhập nếu yêu cầu liên quan đến đăng nhập/đăng ký.
+  // Cập nhật token phiên đăng nhập nếu yêu cầu liên quan đến đăng nhập/đăng ký/refresh token.
   // Đảm bảo logic ở trong `if` chỉ chạy ở phía browser (client)
   if (isClient) {
     if (["/api/auth/login", "/api/auth/register"].some((path) => path === url) && isAuthResponse(payload)) {
       const { accessToken } = payload.data;
-      // localStorage.setItem("accessToken", accessToken);
-      // localStorage.setItem("refreshToken", refreshToken);
+      // Cookies are already set by the API route handler
+      // We only need to update the client-side access token for immediate use
       clientAccessToken.value = accessToken;
-    } else if ("/auth/logout".includes(url)) {
+    } else if (url === "/api/auth/refresh-token" && isAuthResponse(payload)) {
+      // Handle refresh token response
+      const { accessToken } = payload.data;
+      // Cookies are already set by the API route handler
+      // We only need to update the client-side access token for immediate use
+      clientAccessToken.value = accessToken;
+    } else if ("/auth/logout".includes(url) || url === "/api/auth/logout") {
       // Xóa token nếu yêu cầu là đăng xuất.
-      // localStorage.removeItem("accessToken");
-      // localStorage.removeItem("refreshToken");
+      // Cookies are already deleted by the API route handler
       clientAccessToken.value = "";
     }
   }

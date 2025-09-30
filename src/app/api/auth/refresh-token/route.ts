@@ -45,6 +45,10 @@ export async function POST() {
     });
   } catch (error) {
     console.log(error);
+    // Clear cookies on refresh token failure
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+
     if (error instanceof HttpError) {
       return Response.json(error.payload, {
         status: error.status,

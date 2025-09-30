@@ -79,11 +79,14 @@ export const middleware = async (request: NextRequest) => {
     });
 
     console.log("data", data);
-    
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data;
-    const decodedAccessToken = jwtDecode(newAccessToken);
-    const decodedRefreshToken = jwtDecode(newRefreshToken);
-    if (newAccessToken) {
+
+    // Backend returns { message: string, data: { accessToken: string, refreshToken: string } }
+    const newAccessToken = data?.data?.accessToken;
+    const newRefreshToken = data?.data?.refreshToken;
+
+    if (newAccessToken && newRefreshToken) {
+      const decodedAccessToken = jwtDecode(newAccessToken);
+      const decodedRefreshToken = jwtDecode(newRefreshToken);
       const response = NextResponse.next();
       response.cookies.set("accessToken", newAccessToken, {
         httpOnly: true,

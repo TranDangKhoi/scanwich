@@ -45,9 +45,14 @@ export default function TokenRefreshProvider() {
         refreshingTokenRef.current = true;
 
         try {
+          // Call the API route which will handle both:
+          // 1. Refreshing tokens with the backend
+          // 2. Setting new tokens in httpOnly cookies
           const result = await authApi.refreshTokenServerSide();
           const { accessToken: newAccessToken } = result.payload.data;
+          // Update the client-side access token for immediate use in API calls
           clientAccessToken.value = newAccessToken;
+          // Note: The refresh token is already updated in httpOnly cookies by the API route
         } catch (error) {
           clearInterval(refreshTokenIntervalRef.current!);
           refreshTokenIntervalRef.current = null;
