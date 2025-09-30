@@ -32,9 +32,9 @@ export const createEmployeeAccountBodySchema = z
       .trim()
       .min(2, "Tên người dùng cần có ít nhất 2 ký tự")
       .max(256, "Tên người dùng không được vượt quá 256 ký tự"),
-    email: z.string().email("Định dạng e-mail không hợp lệ"),
+    email: z.email("Định dạng e-mail không hợp lệ"),
     avatar: z
-      .union([z.string().url(), z.instanceof(File)])
+      .union([z.url(), z.instanceof(File)])
       .optional()
       .nullable(),
     password: z.string().min(6, "Mật khẩu cần có ít nhất 6 ký tự").max(100, "Mật khẩu không được vượt quá 100 ký tự"),
@@ -59,7 +59,7 @@ export type TCreateEmployeeAccountBody = z.TypeOf<typeof createEmployeeAccountBo
 export const updateEmployeeAccountBodySchema = z
   .object({
     name: z.string().trim().min(2).max(256),
-    email: z.string().email(),
+    email: z.email(),
     avatar: z
       .union([z.string().url(), z.instanceof(File)])
       .optional()

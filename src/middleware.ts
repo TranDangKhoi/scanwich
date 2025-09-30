@@ -1,7 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { authApi } from "src/api-requests/auth.apis";
 import { calculateCookieExpires } from "src/lib/utils";
 
 // Paths that once logged-in you can not go back to
@@ -44,15 +43,43 @@ export const middleware = async (request: NextRequest) => {
     !accessToken &&
     refreshToken
   ) {
+    
     console.log("cookie refreshToken in middleware", refreshToken);
     const result = await fetch("http://localhost:4000/auth/refresh-token", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ refreshToken }),
-});
-      console.log("status", result.status); // check status code (200, 404, 500...)
-const data = await result.json().catch(() => null);
-console.log("data", data);
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken }),
+    });
+
+    console.log("status", result.status); // check status code (200, 404, 500...)
+
+    if (result.status === 401) {
+      const response = NextResponse.redirect(new URL("/login", request.url));
+      response.cookies.set("accessToken", "", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true,
+        path: "/",
+        expires: new Date(0), // expire ngay lập tức
+      });
+
+      response.cookies.set("refreshToken", "", {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: true,
+        path: "/",
+        expires: new Date(0),
+      });
+      return response;
+    }
+    
+    const data = await result.json().catch((err) => {
+      console.log("Error parsing JSON response:", err);
+      return NextResponse.redirect(new URL("/login", request.url));
+    });
+
+    console.log("data", data);
+    
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data;
     const decodedAccessToken = jwtDecode(newAccessToken);
     const decodedRefreshToken = jwtDecode(newRefreshToken);

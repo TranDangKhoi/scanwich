@@ -61,30 +61,34 @@ export const refreshTokenController = async (refreshToken: string) => {
   } catch (error) {
     throw new AuthError("Refresh token không hợp lệ");
   }
-  const refreshTokenDoc = await prisma.refreshToken.findUniqueOrThrow({
-    where: {
-      token: refreshToken,
-    },
-    include: {
-      account: true,
-    },
+
+  // Find the token first
+  const refreshTokenDoc = await prisma.refreshToken.findUnique({
+    where: { token: refreshToken },
+    include: { account: true },
   });
-  console.log("hehe", refreshTokenDoc);
+
+  if (!refreshTokenDoc) {
+    throw new AuthError("No RefreshToken found");
+  }
+
   const account = refreshTokenDoc.account;
+
   const newAccessToken = signAccessToken({
     userId: account.id,
     role: account.role as RoleType,
   });
+
   const newRefreshToken = signRefreshToken({
     userId: account.id,
     role: account.role as RoleType,
     exp: decodedRefreshToken.exp,
   });
+
   await prisma.refreshToken.delete({
-    where: {
-      token: refreshToken,
-    },
+    where: { token: refreshToken },
   });
+
   await prisma.refreshToken.create({
     data: {
       accountId: account.id,
@@ -92,6 +96,7 @@ export const refreshTokenController = async (refreshToken: string) => {
       expiresAt: refreshTokenDoc.expiresAt,
     },
   });
+
   return {
     accessToken: newAccessToken,
     refreshToken: newRefreshToken,
