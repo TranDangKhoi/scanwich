@@ -61,7 +61,7 @@ export const updateEmployeeAccountBodySchema = z
     name: z.string().trim().min(2).max(256),
     email: z.email(),
     avatar: z
-      .union([z.string().url(), z.instanceof(File)])
+      .union([z.url(), z.instanceof(File)])
       .optional()
       .nullable(),
     changePassword: z.boolean().optional(),
@@ -98,7 +98,7 @@ export const updateMeBodySchema = z
       .min(2, "Tên người dùng cần có ít nhất hai ký tự")
       .max(256, "Tên người dùng không được vượt quá 256 ký tự"),
     avatar: z
-      .union([z.string().url(), z.instanceof(File)])
+      .union([z.url(), z.instanceof(File)])
       .optional()
       .nullable(),
   })

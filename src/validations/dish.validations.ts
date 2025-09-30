@@ -6,7 +6,7 @@ export const createDishBodySchema = z.object({
   price: z.coerce.number().positive(),
   description: z.string().max(10000),
   image: z
-    .union([z.string().url(), z.instanceof(File)])
+    .union([z.url(), z.instanceof(File)])
     .optional()
     .nullable(),
   status: z.enum(DISH_STATUS_VALUES).optional(),
