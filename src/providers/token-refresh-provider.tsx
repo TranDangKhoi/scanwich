@@ -16,7 +16,6 @@ export default function TokenRefreshProvider() {
   useEffect(() => {
     // If the current path is in the non-refresh-token routes list, stop further execution
     if (NON_REFRESH_TOKEN_ROUTES.includes(pathname)) return;
-    console.log("Run here maybe");
     const validateAndRefreshToken = async () => {
       const accessToken = clientAccessToken.value;
       if (!accessToken) return;

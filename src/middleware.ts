@@ -51,7 +51,6 @@ export const middleware = async (request: NextRequest) => {
       body: JSON.stringify({ refreshToken }),
     });
 
-    console.log("status", result.status); // check status code (200, 404, 500...)
 
     if (result.status === 401) {
       const response = NextResponse.redirect(new URL("/login", request.url));
@@ -77,8 +76,6 @@ export const middleware = async (request: NextRequest) => {
       console.log("Error parsing JSON response:", err);
       return NextResponse.redirect(new URL("/login", request.url));
     });
-
-    console.log("data", data);
 
     // Backend returns { message: string, data: { accessToken: string, refreshToken: string } }
     const newAccessToken = data?.data?.accessToken;
