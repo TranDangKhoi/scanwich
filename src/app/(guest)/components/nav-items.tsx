@@ -5,7 +5,7 @@ import { PATH } from "src/constants/path.constants";
 const menuItems = [
   {
     title: "Món ăn",
-    href: PATH.MENU,
+    href: PATH.DASHBOARD_DISHES,
     authRequired: true, // Khi chưa đăng nhập thì sẽ không hiển thị
   },
   {
