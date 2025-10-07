@@ -43,14 +43,11 @@ export const middleware = async (request: NextRequest) => {
     !accessToken &&
     refreshToken
   ) {
-    
-    console.log("cookie refreshToken in middleware", refreshToken);
     const result = await fetch("http://localhost:4000/auth/refresh-token", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ refreshToken }),
     });
-
 
     if (result.status === 401) {
       const response = NextResponse.redirect(new URL("/login", request.url));
@@ -71,7 +68,7 @@ export const middleware = async (request: NextRequest) => {
       });
       return response;
     }
-    
+
     const data = await result.json().catch((err) => {
       console.log("Error parsing JSON response:", err);
       return NextResponse.redirect(new URL("/login", request.url));

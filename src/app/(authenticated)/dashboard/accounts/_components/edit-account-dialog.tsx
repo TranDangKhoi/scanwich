@@ -24,6 +24,8 @@ import { Switch } from "src/components/ui/switch";
 import { handleErrorApi } from "src/lib/utils";
 import { TUpdateEmployeeAccountBody, updateEmployeeAccountBodySchema } from "src/validations/account.validations";
 
+// TO DO: Investigate why the role is updated to EMPLOYEE after editting accounts
+
 export default function EditAccountDialog({
   id,
   setId,
