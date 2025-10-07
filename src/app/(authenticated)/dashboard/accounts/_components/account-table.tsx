@@ -34,6 +34,7 @@ import {
 } from "src/components/ui/dropdown-menu";
 import { Input } from "src/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "src/components/ui/table";
+import { ROLE } from "src/constants/types.constants";
 import { TAccount } from "src/validations/account.validations";
 
 const AccountTableContext = createContext<{
@@ -216,16 +217,19 @@ export default function AccountTable() {
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                    ))}
-                  </TableRow>
-                ))
+                table.getRowModel().rows.map((row) => {
+                  if (row.original.role === ROLE.Owner) return null;
+                  return (
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                      ))}
+                    </TableRow>
+                  );
+                })
               ) : (
                 <TableRow>
                   <TableCell

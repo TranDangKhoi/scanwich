@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run open-browser && next dev --turbo -p 3002 ",
+    "dev": "npm run open-browser && next dev -p 3002 ",
     "open-browser": "start http://localhost:3002",
     "build": "next build",
     "start": "next start",
