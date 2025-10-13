@@ -128,7 +128,7 @@ export default function EditAccountDialog({
         avatar: account.avatar as string,
         name: account.name,
         email: account.email,
-        changePassword: false,
+        changePassword: false,     
         password: undefined,
         confirmPassword: undefined,
       });

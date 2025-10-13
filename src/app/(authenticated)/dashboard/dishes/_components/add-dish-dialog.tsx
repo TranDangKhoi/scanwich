@@ -1,7 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { PlusCircle, Upload } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { dishApi } from "src/api-requests/dish.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
 import {
@@ -20,11 +23,11 @@ import { Textarea } from "src/components/ui/textarea";
 import { DISH_STATUS, DISH_STATUS_VALUES } from "src/constants/types.constants";
 import { getVietnameseDishStatus } from "src/lib/dashboard-utils";
 import { createDishBodySchema, TCreateDishBody } from "src/validations/dish.validations";
-// import { getVietnameseDishStatus } from "src/lib/utils";
 
-export default function AddNewDishDialog() {
+export default function AddDishDialog() {
   const [previewThumbnailFile, setPreviewThumbnailFile] = useState<File | null>(null);
   const [open, setOpen] = useState<boolean>(false);
+  const queryClient = useQueryClient();
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const addNewDishForm = useForm<TCreateDishBody>({
@@ -46,6 +49,39 @@ export default function AddNewDishDialog() {
     }
     return defaultThumbnail;
   }, [previewThumbnailFile, defaultThumbnail]);
+
+  const handleReset = () => {
+    addNewDishForm.reset({
+      name: "",
+      price: 0,
+      description: "",
+      image: null,
+      status: DISH_STATUS.Available,
+    });
+    setPreviewThumbnailFile(null);
+  };
+
+  const addDishMutation = useMutation({
+    mutationFn: (body: TCreateDishBody) => dishApi.addDish(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dishes"] });
+      toast.success(
+        <p>
+          Món ăn <span className="font-bold">{dishName}</span> đã được thêm thành công
+        </p>,
+      );
+      setOpen(false);
+      handleReset();
+    },
+  });
+
+  const handleAddDish = addNewDishForm.handleSubmit(async (data) => {
+    try {
+      await addDishMutation.mutateAsync(data);
+    } catch (error) {
+      console.log(error);
+    }
+  });
 
   return (
     <Dialog
@@ -70,6 +106,7 @@ export default function AddNewDishDialog() {
             noValidate
             className="grid auto-rows-max items-start gap-4 md:gap-8"
             id="add-dish-form"
+            onSubmit={handleAddDish}
           >
             <div className="grid gap-4 py-4">
               <FormField
@@ -79,9 +116,9 @@ export default function AddNewDishDialog() {
                   <FormItem>
                     <div className="flex items-start justify-start gap-2">
                       <Avatar className="aspect-square h-[100px] w-[100px] rounded-md object-cover">
-                        <AvatarImage src={previewThumbnailFromFile as string} />
+                        <AvatarImage src={(previewThumbnailFromFile as string) ?? undefined} />
                         <AvatarFallback className="rounded-none">
-                          {dishName || "Uhh something wrong happened"}
+                          {dishName || "Food"}
                         </AvatarFallback>
                       </Avatar>
                       <input

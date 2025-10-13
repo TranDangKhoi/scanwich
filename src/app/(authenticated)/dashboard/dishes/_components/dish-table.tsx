@@ -15,9 +15,12 @@ import {
 } from "@tanstack/react-table";
 import { Button } from "src/components/ui/button";
 
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import AddDish from "src/app/(authenticated)/dashboard/dishes/_components/add-new-dish-dialog";
+import { dishApi } from "src/api-requests/dish.apis";
+import AddDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/add-dish-dialog";
+import EditDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/edit-dish-dialog";
 import AutoPagination from "src/components/manual/auto-pagination";
 import {
   AlertDialog,
@@ -183,9 +186,14 @@ export default function DishTable() {
     pageIndex, // Gía trị mặc định ban đầu, không có ý nghĩa khi data được fetch bất đồng bộ
     pageSize: PAGE_SIZE, //default page size
   });
+  const { data: dishListData } = useQuery({
+    queryKey: ["dishes"],
+    queryFn: () => dishApi.getDishList(),
+  });
+  const dishList = dishListData?.payload.data ?? [];
 
   const table = useReactTable({
-    data,
+    data: dishList,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -216,10 +224,10 @@ export default function DishTable() {
   return (
     <DishTableContext.Provider value={{ dishIdEdit, setDishIdEdit, dishDelete, setDishDelete }}>
       <div className="w-full">
-        {/* <EditDish
+        <EditDishDialog
           id={dishIdEdit}
           setId={setDishIdEdit}
-        /> */}
+        />
         <AlertDialogDeleteDish
           dishDelete={dishDelete}
           setDishDelete={setDishDelete}
@@ -232,7 +240,7 @@ export default function DishTable() {
             className="max-w-sm"
           />
           <div className="ml-auto flex items-center gap-2">
-            <AddDish />
+            <AddDishDialog />
           </div>
         </div>
         <div className="rounded-md border">
@@ -277,7 +285,7 @@ export default function DishTable() {
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 py-4 text-xs text-muted-foreground">
-            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong <strong>{data.length}</strong>{" "}
+            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong <strong>{dishList.length}</strong>{" "}
             kết quả
           </div>
           <div>
