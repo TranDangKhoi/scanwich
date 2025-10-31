@@ -21,6 +21,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { dishApi } from "src/api-requests/dish.apis";
 import AddDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/add-dish-dialog";
 import EditDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/edit-dish-dialog";
+import RemoveDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/remove-dish-dialog";
 import AutoPagination from "src/components/manual/auto-pagination";
 import {
   AlertDialog,
@@ -44,23 +45,21 @@ import {
 import { Input } from "src/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "src/components/ui/table";
 import { formatCurrency, getVietnameseDishStatus } from "src/lib/dashboard-utils";
-import { TDishListRes } from "src/validations/dish.validations";
-
-type DishItem = TDishListRes["data"][0];
+import { TDish, TDishListRes } from "src/validations/dish.validations";
 
 const DishTableContext = createContext<{
   setDishIdEdit: (value: number) => void;
   dishIdEdit: number | undefined;
-  dishDelete: DishItem | null;
-  setDishDelete: (value: DishItem | null) => void;
+  dishDelete: TDish | null;
+  setDishDelete: (value: TDish | null) => void;
 }>({
   setDishIdEdit: (value: number | undefined) => {},
   dishIdEdit: undefined,
   dishDelete: null,
-  setDishDelete: (value: DishItem | null) => {},
+  setDishDelete: (value: TDish | null) => {},
 });
 
-export const columns: ColumnDef<DishItem>[] = [
+export const columns: ColumnDef<TDish>[] = [
   {
     accessorKey: "id",
     header: "ID",
@@ -137,38 +136,6 @@ export const columns: ColumnDef<DishItem>[] = [
   },
 ];
 
-function AlertDialogDeleteDish({
-  dishDelete,
-  setDishDelete,
-}: {
-  dishDelete: DishItem | null;
-  setDishDelete: (value: DishItem | null) => void;
-}) {
-  return (
-    <AlertDialog
-      open={Boolean(dishDelete)}
-      onOpenChange={(value) => {
-        if (!value) {
-          setDishDelete(null);
-        }
-      }}
-    >
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Xóa món ăn?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Món <span className="rounded bg-foreground px-1 text-primary-foreground">{dishDelete?.name}</span> sẽ bị xóa
-            vĩnh viễn
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}
 // Số lượng item trên 1 trang
 const PAGE_SIZE = 10;
 export default function DishTable() {
@@ -176,8 +143,7 @@ export default function DishTable() {
   const page = searchParam.get("page") ? Number(searchParam.get("page")) : 1;
   const pageIndex = page - 1;
   const [dishIdEdit, setDishIdEdit] = useState<number | undefined>();
-  const [dishDelete, setDishDelete] = useState<DishItem | null>(null);
-  const data: any[] = [];
+  const [dishDelete, setDishDelete] = useState<TDish | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -228,7 +194,7 @@ export default function DishTable() {
           id={dishIdEdit}
           setId={setDishIdEdit}
         />
-        <AlertDialogDeleteDish
+        <RemoveDishDialog
           dishDelete={dishDelete}
           setDishDelete={setDishDelete}
         />
@@ -285,8 +251,8 @@ export default function DishTable() {
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
           <div className="flex-1 py-4 text-xs text-muted-foreground">
-            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong <strong>{dishList.length}</strong>{" "}
-            kết quả
+            Hiển thị <strong>{table.getPaginationRowModel().rows.length}</strong> trong{" "}
+            <strong>{dishList.length}</strong> kết quả
           </div>
           <div>
             <AutoPagination
