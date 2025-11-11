@@ -1,5 +1,11 @@
+import { Metadata } from "next";
 import AccountTable from "src/app/(authenticated)/dashboard/accounts/_components/account-table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Quản lý tài khoản",
+  description: "The best dining solution in the world!",
+};
 
 export default function Dashboard() {
   return (

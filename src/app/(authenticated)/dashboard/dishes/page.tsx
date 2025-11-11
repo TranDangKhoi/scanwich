@@ -1,6 +1,11 @@
+import { Metadata } from "next";
 import React from "react";
 import DishTable from "src/app/(authenticated)/dashboard/dishes/_components/dish-table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Quản lý món ăn",
+};
 
 const DishesPage = () => {
   return (
@@ -12,9 +17,9 @@ const DishesPage = () => {
             <CardDescription>Quản lý món ăn</CardDescription>
           </CardHeader>
           <CardContent>
-            <DishTable />                                                                                                                                                                   
+            <DishTable />
           </CardContent>
-        </Card>      
+        </Card>
       </div>
     </main>
   );

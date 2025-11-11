@@ -1,7 +1,16 @@
+import { Metadata } from "next";
 import AppSidebar from "src/app/(authenticated)/dashboard/_components/app-sidebar";
 import DropdownAvatar from "src/app/(authenticated)/dashboard/_components/dropdown-avatar";
 import MobileSidebar from "src/app/(authenticated)/dashboard/_components/mobile-sidebar";
 import { ThemeToggle } from "src/components/ui/theme-toggle";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Scanwich | Khu vực quản lý",
+    template: "Scanwich | %s",
+  },
+  description: "The best dining solution in the world!",
+};
 
 export default function DashboardLayout({
   children,

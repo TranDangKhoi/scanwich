@@ -2,6 +2,10 @@ import ChangePasswordForm from "src/app/(authenticated)/dashboard/settings/compo
 import UpdateProfileForm from "src/app/(authenticated)/dashboard/settings/components/update-profile-form";
 import { Badge } from "src/components/ui/badge";
 
+export const metadata = {
+  title: "Cài đặt",
+};
+
 export default function DashboardSettingsPage() {
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
