@@ -25,14 +25,10 @@ export default function RootLayout({
 }>) {
   const cookieStore = cookies();
   const accessToken = cookieStore.get("accessToken")?.value as string;
-  const refreshToken = cookieStore.get("refreshToken")?.value as string;
   return (
     <html lang="en">
       <body className={cn("bg-background font-sans antialiased", fontSans.variable)}>
-        <AuthProvider
-          initialAccessToken={accessToken}
-          initialRefreshToken={refreshToken}
-        >
+        <AuthProvider initialAccessToken={accessToken}>
           <TanstackProvider>
             <ThemeProvider
               attribute="class"

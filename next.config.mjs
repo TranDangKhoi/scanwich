@@ -7,6 +7,7 @@ const nextConfig = {
     config.plugins.push(codeInspectorPlugin({ bundler: "webpack" }));
     return config;
   },
+  productionBrowserSourceMaps: false,
 };
 
 export default nextConfig;

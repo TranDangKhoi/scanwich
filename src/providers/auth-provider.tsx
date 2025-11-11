@@ -20,14 +20,7 @@ export const AuthContext = createContext<TAuthContext>({
   logout: async () => {},
 });
 
-const AuthProvider = ({
-  children,
-  initialAccessToken = "",
-}: {
-  children: ReactNode;
-  initialAccessToken: string;
-  initialRefreshToken: string;
-}) => {
+const AuthProvider = ({ children, initialAccessToken = "" }: { children: ReactNode; initialAccessToken: string }) => {
   const router = useRouter();
 
   const logout = useCallback(async () => {
