@@ -67,12 +67,12 @@ export default function RemoveAccountAlert({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Không xóa nữa</AlertDialogCancel>
+          <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDeleteAccount}
             className="bg-destructive text-primary hover:bg-destructive-hover hover:text-primary"
           >
-            Xóa vĩnh viễn
+            Xác nhận
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

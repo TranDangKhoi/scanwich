@@ -135,7 +135,6 @@ const request = async <TResponse, TBody = unknown>(
 
   // Tạo URL đầy đủ bằng cách kết hợp baseUrl và đường dẫn tương đối.
   const fullUrl = url.startsWith("/") ? `${baseUrl}${url}` : `${baseUrl}/${url}`;
-  
 
   // Thực hiện yêu cầu HTTP bằng `fetch`.
   const res = await fetch(fullUrl, {
@@ -181,9 +180,7 @@ const request = async <TResponse, TBody = unknown>(
             ...baseHeaders,
           },
         }).finally(() => {
-          // Đăng xuất thành công thì xóa token trong localStorage và chuyển hướng người dùng đến trang đăng nhập.
-          // localStorage.removeItem("accessToken");
-          // localStorage.removeItem("refreshToken");
+          // Đăng xuất thành công thì xóa token và chuyển hướng người dùng đến trang đăng nhập (thông qua emit message ra cho authProvider xử lý).
           clientAccessToken.value = "";
           eventEmitter.emit(EVENTS.UNAUTHORIZED_EVENT);
         });
@@ -199,9 +196,7 @@ const request = async <TResponse, TBody = unknown>(
           ...baseHeaders,
         },
       }).finally(() => {
-        // Đăng xuất thành công thì xóa token trong localStorage và chuyển hướng người dùng đến trang đăng nhập.
-        // localStorage.removeItem("accessToken");
-        // localStorage.removeItem("refreshToken");
+        // Đăng xuất thành công thì xóa token và chuyển hướng người dùng đến trang đăng nhập (thông qua emit message ra cho authProvider xử lý).
         clientAccessToken.value = "";
         eventEmitter.emit(EVENTS.UNAUTHORIZED_EVENT);
       });

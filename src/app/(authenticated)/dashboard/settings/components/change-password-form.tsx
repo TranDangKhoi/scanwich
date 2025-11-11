@@ -56,7 +56,8 @@ export default function ChangePasswordForm() {
           <CardHeader>
             <CardTitle>Đổi mật khẩu</CardTitle>
             <CardDescription>
-              Đổi mật khẩu để an toàn hơn nè! (＾▽＾)／, nhưng hãy cẩn thận bị nhìn lén (•﹏•;)
+              Đổi mật khẩu để an toàn hơn nè! (＾▽＾)／, nhưng hãy cẩn thận bị nhìn lén{" "}
+              <span className="inline-block">(•﹏•;)</span>
             </CardDescription>
           </CardHeader>
           <CardContent>

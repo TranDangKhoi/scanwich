@@ -66,8 +66,8 @@ export default function RemoveDishDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDeleteDish}>Continue</AlertDialogAction>
+          <AlertDialogCancel>Hủy bỏ</AlertDialogCancel>
+          <AlertDialogAction onClick={handleDeleteDish}>Xác nhận</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
