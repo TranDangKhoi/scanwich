@@ -5,6 +5,7 @@ import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { dishApi } from "src/api-requests/dish.apis";
+import { mediaApi } from "src/api-requests/media.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
 import {
@@ -20,8 +21,10 @@ import { Input } from "src/components/ui/input";
 import { Label } from "src/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "src/components/ui/select";
 import { Textarea } from "src/components/ui/textarea";
+import { DEFAULT_IMAGE_PLACEHOLDER_URL } from "src/constants/general.constants";
 import { DISH_STATUS, DISH_STATUS_VALUES } from "src/constants/types.constants";
 import { getVietnameseDishStatus } from "src/lib/dashboard-utils";
+import { handleErrorApi } from "src/lib/utils";
 import { createDishBodySchema, TCreateDishBody } from "src/validations/dish.validations";
 
 export default function AddDishDialog() {
@@ -61,6 +64,10 @@ export default function AddDishDialog() {
     setPreviewThumbnailFile(null);
   };
 
+  const uploadImageMutation = useMutation({
+    mutationFn: (body: FormData) => mediaApi.uploadImage(body),
+  });
+
   const addDishMutation = useMutation({
     mutationFn: (body: TCreateDishBody) => dishApi.addDish(body),
     onSuccess: () => {
@@ -76,10 +83,25 @@ export default function AddDishDialog() {
   });
 
   const handleAddDish = addNewDishForm.handleSubmit(async (data) => {
+    let newThumbnailUrl = null;
+
     try {
-      await addDishMutation.mutateAsync(data);
+      if (previewThumbnailFile) {
+        const formData = new FormData();
+        formData.append("file", previewThumbnailFile);
+        const result = await uploadImageMutation.mutateAsync(formData);
+        newThumbnailUrl = result.payload.data;
+      }
+      await addDishMutation.mutateAsync({
+        ...data,
+        image: newThumbnailUrl ?? DEFAULT_IMAGE_PLACEHOLDER_URL,
+      });
     } catch (error) {
-      console.log(error);
+      handleErrorApi({
+        error,
+        setError: addNewDishForm.setError,
+        defaultMessage: "Có lỗi xảy ra khi thêm món ăn",
+      });
     }
   });
 
@@ -117,9 +139,7 @@ export default function AddDishDialog() {
                     <div className="flex items-start justify-start gap-2">
                       <Avatar className="aspect-square h-[100px] w-[100px] rounded-md object-cover">
                         <AvatarImage src={(previewThumbnailFromFile as string) ?? undefined} />
-                        <AvatarFallback className="rounded-none">
-                          {dishName || "Food"}
-                        </AvatarFallback>
+                        <AvatarFallback className="rounded-none">{dishName || "Food"}</AvatarFallback>
                       </Avatar>
                       <input
                         type="file"
