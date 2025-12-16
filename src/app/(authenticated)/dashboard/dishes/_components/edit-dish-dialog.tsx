@@ -60,7 +60,6 @@ export default function EditDishDialog({
     queryKey: ["dish", id],
     queryFn: () => dishApi.getDishDetail(id!),
     enabled: Boolean(id),
-    staleTime: 10000,
   });
 
   const uploadImageMutation = useMutation({
@@ -79,7 +78,7 @@ export default function EditDishDialog({
         </p>,
       );
     },
-  })
+  });
 
   const dish = dishDetail?.payload.data;
 
@@ -118,7 +117,7 @@ export default function EditDishDialog({
   });
 
   useLayoutEffect(() => {
-    if (dish) {
+    if (dish && id) {
       editDishForm.reset({
         name: dish.name,
         description: dish.description,
@@ -127,7 +126,7 @@ export default function EditDishDialog({
         status: dish.status,
       });
     }
-  }, [dish, editDishForm])
+  }, [dish, editDishForm, id]);
 
   return (
     <Dialog
@@ -256,7 +255,7 @@ export default function EditDishDialog({
                       <div className="col-span-3 w-full space-y-2">
                         <Select
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
