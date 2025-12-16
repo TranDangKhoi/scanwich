@@ -1,6 +1,7 @@
 "use client";
 
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -13,9 +14,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { Button } from "src/components/ui/button";
-
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { dishApi } from "src/api-requests/dish.apis";
@@ -23,17 +21,8 @@ import AddDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/
 import EditDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/edit-dish-dialog";
 import RemoveDishDialog from "src/app/(authenticated)/dashboard/dishes/_components/remove-dish-dialog";
 import AutoPagination from "src/components/manual/auto-pagination";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "src/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
+import { Button } from "src/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +34,7 @@ import {
 import { Input } from "src/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "src/components/ui/table";
 import { formatCurrency, getVietnameseDishStatus } from "src/lib/dashboard-utils";
-import { TDish, TDishListRes } from "src/validations/dish.validations";
+import { TDish } from "src/validations/dish.validations";
 
 const DishTableContext = createContext<{
   setDishIdEdit: (value: number) => void;
@@ -89,12 +78,10 @@ export const columns: ColumnDef<TDish>[] = [
   {
     accessorKey: "description",
     header: "Mô tả",
-    cell: ({ row }) => (
-      <div
-        dangerouslySetInnerHTML={{ __html: row.getValue("description") }}
-        className="whitespace-pre-line"
-      />
-    ),
+    cell: ({ row }) => {
+      console.log(row.original.description);
+      return <div className="line-clamp-3 whitespace-pre-line">{row.getValue("description")}</div>;
+    },
   },
   {
     accessorKey: "status",
@@ -120,12 +107,12 @@ export const columns: ColumnDef<TDish>[] = [
               variant="ghost"
               className="h-8 w-8 p-0"
             >
-              <span className="sr-only">Open menu</span>
+              <span className="sr-only">Mở menu</span>
               <DotsHorizontalIcon className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Bạn muốn thực hiện?</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={openEditDish}>Sửa</DropdownMenuItem>
             <DropdownMenuItem onClick={openDeleteDish}>Xóa</DropdownMenuItem>

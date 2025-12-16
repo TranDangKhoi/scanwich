@@ -1,6 +1,6 @@
+import DOMPurify from "dompurify";
 import parsedEnvData from "src/config";
 import { DISH_STATUS, TABLE_STATUS } from "src/constants/types.constants";
-
 export const formatCurrency = (number: number) => {
   return new Intl.NumberFormat("vi-VN", {
     style: "currency",
@@ -8,7 +8,7 @@ export const formatCurrency = (number: number) => {
   }).format(number);
 };
 
-export const getVietnameseDishStatus = (status: (typeof DISH_STATUS)[keyof typeof DISH_STATUS]) => {
+export const getVietnameseDishStatus = (status?: (typeof DISH_STATUS)[keyof typeof DISH_STATUS]) => {
   switch (status) {
     case DISH_STATUS.Available:
       return "Có sẵn";
@@ -32,4 +32,13 @@ export const getVietnameseTableStatus = (status: (typeof TABLE_STATUS)[keyof typ
 
 export const getTableLink = ({ token, tableNumber }: { token: string; tableNumber: number }) => {
   return parsedEnvData.NEXT_PUBLIC_URL + "/tables/" + tableNumber + "?token=" + token;
+};
+
+export const sanitizeText = (text: string) => {
+  if (!text) return "";
+
+  return DOMPurify.sanitize(text, {
+    ALLOWED_TAGS: [],
+    ALLOWED_ATTR: [],
+  });
 };
