@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { accountApi } from "src/api-requests/accounts.apis";
+import { accountApi } from "src/api-requests/account.apis";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,17 +15,17 @@ import { handleErrorApi } from "src/lib/utils";
 import { TAccount } from "src/validations/account.validations";
 
 export default function RemoveAccountAlert({
-  employeeDelete,
-  setEmployeeDelete,
+  accountToBeDeleted,
+  setAccountToBeDeleted,
 }: {
-  employeeDelete: TAccount | null;
-  setEmployeeDelete: React.Dispatch<React.SetStateAction<TAccount | null>>;
+  accountToBeDeleted: TAccount | null;
+  setAccountToBeDeleted: React.Dispatch<React.SetStateAction<TAccount | null>>;
 }) {
   const queryClient = useQueryClient();
   const accountDeleteMutation = useMutation({
     mutationFn: (id: number) => accountApi.removeAccount(id),
     onSuccess: (data) => {
-      setEmployeeDelete(null);
+      setAccountToBeDeleted(null);
       queryClient.invalidateQueries({ queryKey: ["accounts"] });
       toast.success(
         <p>
@@ -37,8 +37,8 @@ export default function RemoveAccountAlert({
 
   const handleDeleteAccount = () => {
     try {
-      if (employeeDelete) {
-        accountDeleteMutation.mutate(employeeDelete.id);
+      if (accountToBeDeleted) {
+        accountDeleteMutation.mutate(accountToBeDeleted.id);
       }
     } catch (error) {
       handleErrorApi({
@@ -50,10 +50,10 @@ export default function RemoveAccountAlert({
 
   return (
     <AlertDialog
-      open={Boolean(employeeDelete)}
+      open={Boolean(accountToBeDeleted)}
       onOpenChange={(value) => {
         if (!value) {
-          setEmployeeDelete(null);
+          setAccountToBeDeleted(null);
         }
       }}
     >
@@ -62,7 +62,9 @@ export default function RemoveAccountAlert({
           <AlertDialogTitle>Xóa nhân viên?</AlertDialogTitle>
           <AlertDialogDescription>
             Tài khoản{" "}
-            <span className="rounded-md font-semibold text-primary">{employeeDelete?.name || "Unknown account"}</span>{" "}
+            <span className="rounded-md font-semibold text-primary">
+              {accountToBeDeleted?.name || "Unknown account"}
+            </span>{" "}
             sẽ bị xóa vĩnh viễn
           </AlertDialogDescription>
         </AlertDialogHeader>

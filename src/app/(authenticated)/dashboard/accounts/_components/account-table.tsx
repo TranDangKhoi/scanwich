@@ -18,7 +18,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { Button } from "src/components/ui/button";
 // import EditEmployee from "src/app/manage/accounts/edit-employee";
 import { useQuery } from "@tanstack/react-query";
-import { accountApi } from "src/api-requests/accounts.apis";
+import { accountApi } from "src/api-requests/account.apis";
 import AddAccountDialog from "src/app/(authenticated)/dashboard/accounts/_components/add-account-dialog";
 import EditAccountDialog from "src/app/(authenticated)/dashboard/accounts/_components/edit-account-dialog";
 import RemoveAccountAlert from "src/app/(authenticated)/dashboard/accounts/_components/remove-account-alert";
@@ -38,15 +38,15 @@ import { ROLE } from "src/constants/types.constants";
 import { TAccount } from "src/validations/account.validations";
 
 const AccountTableContext = createContext<{
-  setEmployeeIdEdit: React.Dispatch<React.SetStateAction<number | undefined>>;
-  employeeIdEdit: number | undefined;
-  employeeDelete: TAccount | null;
-  setEmployeeDelete: React.Dispatch<React.SetStateAction<TAccount | null>>;
+  setAccountIdEdit: React.Dispatch<React.SetStateAction<number | undefined>>;
+  accountIdEdit: number | undefined;
+  accountToBeDeleted: TAccount | null;
+  setAccountToBeDeleted: React.Dispatch<React.SetStateAction<TAccount | null>>;
 }>({
-  setEmployeeIdEdit: (value: React.SetStateAction<number | undefined>) => {},
-  employeeIdEdit: undefined,
-  employeeDelete: null,
-  setEmployeeDelete: (value: React.SetStateAction<TAccount | null>) => {},
+  setAccountIdEdit: (value: React.SetStateAction<number | undefined>) => {},
+  accountIdEdit: undefined,
+  accountToBeDeleted: null,
+  setAccountToBeDeleted: (value: React.SetStateAction<TAccount | null>) => {},
 });
 
 export const columns: ColumnDef<TAccount>[] = [
@@ -94,13 +94,13 @@ export const columns: ColumnDef<TAccount>[] = [
     id: "actions",
     header: "Hành động",
     cell: function Actions({ row }) {
-      const { setEmployeeIdEdit, setEmployeeDelete } = useContext(AccountTableContext);
+      const { setAccountIdEdit, setAccountToBeDeleted } = useContext(AccountTableContext);
       const openEditEmployee = () => {
-        setEmployeeIdEdit(row.original.id);
+        setAccountIdEdit(row.original.id);
       };
 
       const openDeleteEmployee = () => {
-        setEmployeeDelete(row.original);
+        setAccountToBeDeleted(row.original);
       };
       return (
         <DropdownMenu>
@@ -131,8 +131,8 @@ export default function AccountTable() {
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const pageIndex = page - 1;
   // const params = Object.fromEntries(searchParam.entries())
-  const [employeeIdEdit, setEmployeeIdEdit] = useState<number | undefined>();
-  const [employeeDelete, setEmployeeDelete] = useState<TAccount | null>(null);
+  const [accountIdEdit, setAccountIdEdit] = useState<number | undefined>();
+  const [accountToBeDeleted, setAccountToBeDeleted] = useState<TAccount | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -178,16 +178,18 @@ export default function AccountTable() {
   }, [table, pageIndex]);
 
   return (
-    <AccountTableContext.Provider value={{ employeeIdEdit, setEmployeeIdEdit, employeeDelete, setEmployeeDelete }}>
+    <AccountTableContext.Provider
+      value={{ accountIdEdit, setAccountIdEdit, accountToBeDeleted, setAccountToBeDeleted }}
+    >
       <div className="w-full">
         <EditAccountDialog
-          id={employeeIdEdit}
-          setId={setEmployeeIdEdit}
+          id={accountIdEdit}
+          setId={setAccountIdEdit}
           onSubmitSuccess={() => {}}
         />
         <RemoveAccountAlert
-          employeeDelete={employeeDelete}
-          setEmployeeDelete={setEmployeeDelete}
+          accountToBeDeleted={accountToBeDeleted}
+          setAccountToBeDeleted={setAccountToBeDeleted}
         />
         <div className="flex items-center py-4">
           <Input

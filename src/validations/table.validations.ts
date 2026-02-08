@@ -18,6 +18,8 @@ export const tableSchema = z.object({
   updatedAt: z.date(),
 });
 
+export type TTable = z.TypeOf<typeof tableSchema>;
+
 export const tableRes = z.object({
   data: tableSchema,
   message: z.string(),
@@ -32,13 +34,13 @@ export const tableListRes = z.object({
 
 export type TTableListRes = z.TypeOf<typeof tableListRes>;
 
-export const updateTableBody = z.object({
+export const updateTableBodySchema = z.object({
   changeToken: z.boolean(),
   capacity: z.coerce.number().positive(),
   status: z.enum(TABLE_STATUS_VALUES).optional(),
 });
 
-export type TUpdateTableBody = z.TypeOf<typeof updateTableBody>;
+export type TUpdateTableBody = z.TypeOf<typeof updateTableBodySchema>;
 
 export const tableParams = z.object({
   number: z.coerce.number(),

@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { accountApi } from "src/api-requests/accounts.apis";
+import { accountApi } from "src/api-requests/account.apis";
 import { Button } from "src/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "src/components/ui/card";
 import { Form, FormField, FormItem, FormMessage } from "src/components/ui/form";

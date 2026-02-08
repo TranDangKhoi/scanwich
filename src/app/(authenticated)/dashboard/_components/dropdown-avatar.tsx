@@ -3,7 +3,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { accountApi } from "src/api-requests/accounts.apis";
+import { accountApi } from "src/api-requests/account.apis";
 import { authApi } from "src/api-requests/auth.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Badge } from "src/components/ui/badge";

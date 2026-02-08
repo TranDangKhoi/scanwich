@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { accountApi } from "src/api-requests/accounts.apis";
+import { accountApi } from "src/api-requests/account.apis";
 import { mediaApi } from "src/api-requests/media.apis";
 import { Avatar, AvatarFallback, AvatarImage } from "src/components/ui/avatar";
 import { Button } from "src/components/ui/button";
