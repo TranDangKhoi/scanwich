@@ -23,6 +23,7 @@ import AddTableDialog from "src/app/(authenticated)/dashboard/dining-tables/_com
 import EditTableDialog from "src/app/(authenticated)/dashboard/dining-tables/_components/edit-table-dialog";
 import RemoveTableAlert from "src/app/(authenticated)/dashboard/dining-tables/_components/remove-table-alert";
 import AutoPagination from "src/components/manual/auto-pagination";
+import QrCodeGenerator from "src/components/manual/qr-code";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,7 +34,7 @@ import {
 } from "src/components/ui/dropdown-menu";
 import { Input } from "src/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "src/components/ui/table";
-import { getVietnameseTableStatus } from "src/lib/dashboard-utils";
+import { getTableLink, getVietnameseTableStatus } from "src/lib/dashboard-utils";
 import { TTable } from "src/validations/table.validations";
 
 const DiningTableContext = createContext<{
@@ -67,7 +68,9 @@ export const columns: ColumnDef<TTable>[] = [
   {
     accessorKey: "token",
     header: "QR Code",
-    cell: ({ row }) => <div>{row.getValue("number")}</div>,
+    cell: ({ row }) => (
+      <QrCodeGenerator value={getTableLink({ token: row.getValue("token"), tableNumber: row.getValue("number") })} />
+    ),
   },
   {
     id: "actions",
