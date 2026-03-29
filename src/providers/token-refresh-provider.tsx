@@ -5,72 +5,123 @@ import { useEffect, useRef } from "react";
 import { authApi } from "src/api-requests/auth.apis";
 import { clientAccessToken } from "src/lib/http";
 
-// Routes that don't require /refresh-token API
-const NON_REFRESH_TOKEN_ROUTES = ["/login", "/refresh-token", "/"];
+// Pages where we don't need to keep refreshing tokens (guest pages / landing page).
+const NO_TOKEN_REFRESH_PATHS = ["/login", "/refresh-token", "/"];
 
 export default function TokenRefreshProvider() {
   const pathname = usePathname();
   const router = useRouter();
-  const refreshTokenIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const refreshingTokenRef = useRef<boolean | null>(null);
+  const refreshCheckIntervalIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isRefreshInFlightRef = useRef(false);
+  const lastRefreshAttemptMsRef = useRef(0);
   useEffect(() => {
-    // If the current path is in the non-refresh-token routes list, stop further execution
-    if (NON_REFRESH_TOKEN_ROUTES.includes(pathname)) return;
-    const validateAndRefreshToken = async () => {
+    const stopRefreshCheckInterval = () => {
+      if (refreshCheckIntervalIdRef.current) {
+        clearInterval(refreshCheckIntervalIdRef.current);
+        refreshCheckIntervalIdRef.current = null;
+      }
+    };
+
+    stopRefreshCheckInterval();
+
+    if (NO_TOKEN_REFRESH_PATHS.includes(pathname)) return;
+
+    const refreshIfNeeded = async () => {
       const accessToken = clientAccessToken.value;
       if (!accessToken) return;
 
-      const decodedAccessToken = jwtDecode<{ exp: number; iat: number }>(accessToken);
-      const now = new Date().getTime() / 1000 - 1;
+      let decodedAccessToken: { exp: number; iat: number };
+      try {
+        decodedAccessToken = jwtDecode<{ exp: number; iat: number }>(accessToken);
+      } catch {
+        // If the token is malformed, treat as logged-out.
+        clientAccessToken.value = "";
+        router.push("/login");
+        return;
+      }
 
-      const accessTokenExpireDate = decodedAccessToken.exp;
+      const now = Date.now() / 1000;
 
-      const accessTokenIssuedAt = decodedAccessToken.iat;
+      const accessTokenExpiresAtSeconds = decodedAccessToken.exp;
+      const accessTokenIssuedAtSeconds = decodedAccessToken.iat;
 
-      // For instance, if our access token expires after 10 secs
-      // we will check if one-third of the time (3.333s) remains, and if so, we will refresh the token.
+      const secondsLeft = accessTokenExpiresAtSeconds - now;
+      const totalLifetimeSeconds = accessTokenExpiresAtSeconds - accessTokenIssuedAtSeconds;
 
-      // Thời gian còn lại sẽ tính dựa trên công thức: decodedAccessToken.exp - now
-      const secondsLeftBeforeAccessTokenExpire = accessTokenExpireDate - now;
+      // Refresh when the token is close to expiring.
+      // - The "1/3 lifetime" heuristic adapts to different token TTLs.
+      // - The 60s minimum avoids refreshing too frequently for short TTLs.
+      const shouldRefresh = secondsLeft <= Math.max(60, totalLifetimeSeconds / 3);
+      if (shouldRefresh) {
+        const nowMs = Date.now();
+        if (nowMs - lastRefreshAttemptMsRef.current < 5000) return;
 
-      // Thời gian hết hạn (giây) sẽ tính dựa trên công thức: decodedAccessToken.exp - decodedAccessToken.iat
-      const totalAccessTokenLifetime = accessTokenExpireDate - accessTokenIssuedAt;
-
-      const isAccessTokenAlmostExpired = secondsLeftBeforeAccessTokenExpire <= totalAccessTokenLifetime / 3;
-      if (isAccessTokenAlmostExpired) {
-        // These 2 lines are to prevent multiple refresh token requests
-        // If the refresh token request is already in progress, we will return immediately
-        if (refreshingTokenRef.current) return;
-        refreshingTokenRef.current = true;
+        // Prevent concurrent refresh requests (can happen with focus/visibility events).
+        if (isRefreshInFlightRef.current) return;
+        isRefreshInFlightRef.current = true;
+        lastRefreshAttemptMsRef.current = nowMs;
 
         try {
-          // Call the API route which will handle both:
-          // 1. Refreshing tokens with the backend
-          // 2. Setting new tokens in httpOnly cookies
+          // Calls Next.js route:
+          // - refreshes via backend using the refreshToken cookie
+          // - updates httpOnly cookies
           const result = await authApi.refreshTokenServerSide();
           const { accessToken: newAccessToken } = result.payload.data;
-          // Update the client-side access token for immediate use in API calls
           clientAccessToken.value = newAccessToken;
-          // Note: The refresh token is already updated in httpOnly cookies by the API route
         } catch (error) {
-          clearInterval(refreshTokenIntervalRef.current!);
-          refreshTokenIntervalRef.current = null;
+          stopRefreshCheckInterval();
           router.push("/login");
           return error;
         } finally {
-          refreshingTokenRef.current = false;
+          isRefreshInFlightRef.current = false;
         }
       }
     };
 
-    validateAndRefreshToken();
-    refreshTokenIntervalRef.current = setInterval(validateAndRefreshToken, 3000);
-    return () => {
-      if (refreshTokenIntervalRef.current) {
-        clearInterval(refreshTokenIntervalRef.current);
-        refreshTokenIntervalRef.current = null;
+    const runRefreshCheck = () => {
+      void refreshIfNeeded();
+    };
+
+    const startRefreshCheckInterval = () => {
+      stopRefreshCheckInterval();
+      // Keep a low-frequency check while the tab is visible.
+      // Background tabs can throttle timers heavily, so we also refresh on "resume" events.
+      refreshCheckIntervalIdRef.current = setInterval(runRefreshCheck, 30000);
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        runRefreshCheck();
+        startRefreshCheckInterval();
+      } else {
+        stopRefreshCheckInterval();
       }
     };
+
+    const onFocus = () => {
+      runRefreshCheck();
+    };
+
+    const onOnline = () => {
+      runRefreshCheck();
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("online", onOnline);
+
+    runRefreshCheck();
+    if (document.visibilityState === "visible") {
+      startRefreshCheckInterval();
+    }
+
+    return () => {
+      stopRefreshCheckInterval();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("online", onOnline);
+      isRefreshInFlightRef.current = false;
+    };
   }, [pathname, router]);
-  return <div></div>;
+  return null;
 }
