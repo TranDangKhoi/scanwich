@@ -32,7 +32,7 @@ import {
   DropdownMenuTrigger,
 } from "src/components/ui/dropdown-menu";
 import { Input } from "src/components/ui/input";
-import { Table, TableHead, TableHeader, TableRow } from "src/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "src/components/ui/table";
 import { getVietnameseTableStatus } from "src/lib/dashboard-utils";
 import { TTable } from "src/validations/table.validations";
 
@@ -42,10 +42,10 @@ const DiningTableContext = createContext<{
   tableToBeDeleted: TTable | null;
   setTableToBeDeleted: React.Dispatch<React.SetStateAction<TTable | null>>;
 }>({
-  setTableIdEdit: (value: React.SetStateAction<number | undefined>) => {},
+  setTableIdEdit: () => {},
   tableIdEdit: undefined,
   tableToBeDeleted: null,
-  setTableToBeDeleted: (value: React.SetStateAction<TTable | null>) => {},
+  setTableToBeDeleted: () => {},
 });
 
 export const columns: ColumnDef<TTable>[] = [
@@ -109,7 +109,6 @@ export default function DiningTablesTable() {
   const searchParams = useSearchParams();
   const page = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
   const pageIndex = page - 1;
-  // const params = Object.fromEntries(searchParam.entries())
   const [tableIdEdit, setTableIdEdit] = useState<number | undefined>();
   const [tableToBeDeleted, setTableToBeDeleted] = useState<TTable | null>(null);
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -117,8 +116,8 @@ export default function DiningTablesTable() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
   const [pagination, setPagination] = useState({
-    pageIndex, // Gía trị mặc định ban đầu, không có ý nghĩa khi data được fetch bất đồng bộ
-    pageSize: PAGE_SIZE, //default page size
+    pageIndex,
+    pageSize: PAGE_SIZE,
   });
 
   const { data: tableListData } = useQuery({
@@ -170,9 +169,9 @@ export default function DiningTablesTable() {
         />
         <div className="flex items-center py-4">
           <Input
-            placeholder="Tìm kiếm theo e-mail"
-            value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-            onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
+            placeholder="Tìm kiếm số hiệu bàn"
+            value={(table.getColumn("number")?.getFilterValue() as string) ?? ""}
+            onChange={(event) => table.getColumn("number")?.setFilterValue(event.target.value)}
             className="max-w-sm"
           />
           <div className="ml-auto flex items-center gap-2">
@@ -194,6 +193,29 @@ export default function DiningTablesTable() {
                 </TableRow>
               ))}
             </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    Không tìm thấy kết quả.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
           </Table>
         </div>
         <div className="flex items-center justify-end space-x-2 py-4">
@@ -205,7 +227,7 @@ export default function DiningTablesTable() {
             <AutoPagination
               currentPage={table.getState().pagination.pageIndex + 1}
               pageSize={table.getPageCount()}
-              pathname="/manage/tables"
+              pathname="/dashboard/dining-tables"
             />
           </div>
         </div>

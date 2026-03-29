@@ -39,3 +39,7 @@ export function handleErrorApi({
     });
   }
 }
+
+export function isNumericValue(value: string) {
+  return value === "" || /^[0-9]+$/.test(value);
+}

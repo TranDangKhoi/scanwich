@@ -4,7 +4,7 @@ export const PATH = {
   MENU: "/menu",
   DASHBOARD: "/dashboard",
   DASHBOARD_ACCOUNTS: "/dashboard/accounts",
-  DASHBOARD_TABLES: "/dashboard/tables",
+  DASHBOARD_TABLES: "/dashboard/dining-tables",
   DASHBOARD_ORDERS: "/dashboard/orders",
   DASHBOARD_DISHES: "/dashboard/dishes",
   DASHBOARD_ANALYTICS: "/dashboard/analytics",
