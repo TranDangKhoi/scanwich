@@ -70,7 +70,7 @@ export const columns: ColumnDef<TTable>[] = [
     header: "QR Code",
     cell: ({ row }) => (
       <QrCodeGenerator
-        textContent={`Bàn số ${row.getValue("number")}`}
+        textContent={`Mã bàn: ${row.getValue("number")}`}
         value={getTableLink({ token: row.getValue("token"), tableNumber: row.getValue("number") })}
       />
     ),
