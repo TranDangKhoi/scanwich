@@ -23,7 +23,7 @@ import AddTableDialog from "src/app/(authenticated)/dashboard/dining-tables/_com
 import EditTableDialog from "src/app/(authenticated)/dashboard/dining-tables/_components/edit-table-dialog";
 import RemoveTableAlert from "src/app/(authenticated)/dashboard/dining-tables/_components/remove-table-alert";
 import AutoPagination from "src/components/manual/auto-pagination";
-import QrCodeGenerator from "src/components/manual/qr-code";
+import QrCodeGenerator from "src/components/manual/qr-code-generator";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,7 +69,10 @@ export const columns: ColumnDef<TTable>[] = [
     accessorKey: "token",
     header: "QR Code",
     cell: ({ row }) => (
-      <QrCodeGenerator value={getTableLink({ token: row.getValue("token"), tableNumber: row.getValue("number") })} />
+      <QrCodeGenerator
+        textContent={`Bàn số ${row.getValue("number")}`}
+        value={getTableLink({ token: row.getValue("token"), tableNumber: row.getValue("number") })}
+      />
     ),
   },
   {
